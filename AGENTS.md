@@ -7,6 +7,19 @@ AI로 만든 자료에 신뢰를 붙이는 스킬 모음. 스킬 본문은 그�
 | **verify-badge** | 리포트에 검증 이력 뱃지 — 실명 책임·신뢰 등급(A/B/C/D)·1차 출처·못 한 것 | [`skills/verify-badge/SKILL.md`](skills/verify-badge/SKILL.md) |
 | claude-run | 내 Claude 사용량을 가성비 랭킹에 갱신 | [`plugins/claude-run/skills/`](plugins/claude-run/skills/) — Claude Code 전용(스크립트 의존) |
 
+## 가져다 쓰는 법
+
+**쓰던 AI에 이 3줄:**
+```
+https://raw.githubusercontent.com/m1kapp/m1kskills/main/AGENTS.md
+
+이 문서를 읽고 "Verify Badge" 지침을 그대로 따라서,
+지금 작업 중인 자료에 검증 이력 뱃지를 붙여줘.
+```
+
+웹을 못 읽는 환경이면 아래 `# Verify Badge` 부터 파일 끝까지 **전체 복사**해 붙여넣어도 동일합니다.
+계속 쓸 거면 이 파일을 레포 루트에 `AGENTS.md` 로 두세요 — 28개+ 툴이 자동으로 읽습니다.
+
 Claude Code면 설치가 더 편합니다:
 ```
 /plugin marketplace add m1kapp/m1kskills
@@ -16,8 +29,6 @@ Claude Code면 설치가 더 편합니다:
 ---
 
 ## verify-badge
-
-아래 `# Verify Badge` 부터 파일 끝까지 **전체 복사**해서 AI에 붙여넣으면 바로 씁니다.
 
 ---
 

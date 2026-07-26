@@ -78,19 +78,28 @@ AI로 만든 자료의 첫 반응은 늘 **"이거 진짜야?"** 입니다. 이 
 
 #### Claude Code가 아니어도 씁니다
 
-스킬 본문은 **그냥 마크다운 프롬프트**라 어느 AI에나 붙여넣으면 작동합니다.
-👉 [`AGENTS.md`](AGENTS.md) **전체 복사** 후:
+**쓰던 AI에 아래 3줄만 던지세요.** 나머지는 그쪽 에이전트가 알아서 합니다.
 
-| 도구 | 붙여넣는 곳 |
+```
+https://raw.githubusercontent.com/m1kapp/m1kskills/main/AGENTS.md
+
+이 문서를 읽고 "Verify Badge" 지침을 그대로 따라서,
+지금 작업 중인 자료에 검증 이력 뱃지를 붙여줘.
+```
+
+웹을 못 읽는 환경(브라우징 꺼진 ChatGPT 등)이면 [`AGENTS.md`](AGENTS.md) 를 열어 **전체 복사**해 붙여넣으면 똑같이 동작합니다. 본문이 그냥 마크다운이라 준비물이 없습니다.
+
+**계속 쓸 거면 고정해 두세요:**
+
+| 도구 | 두는 곳 |
 |---|---|
-| **ChatGPT** | Custom GPT → Instructions / 또는 대화창에 붙여넣고 시작 |
+| **Cursor · Copilot · Codex · Windsurf · Zed** | 레포 루트에 `AGENTS.md` 파일로 두면 자동 인식 |
 | **Claude 웹·앱** | Project → Project instructions |
-| **Cursor** | `.cursorrules` 에 붙여넣기 (또는 파일 두고 `@AGENTS.md` 참조) |
-| **Copilot · Codex · Windsurf · Zed** | 레포 루트에 `AGENTS.md` 로 두면 자동 인식 |
-| **Gemini · 기타** | 대화 시작 시 붙여넣기 |
+| **ChatGPT** | Custom GPT → Instructions |
+| **Gemini · 기타** | 대화 시작 시 위 3줄 |
 
 > `AGENTS.md` 는 [AAIF(Linux Foundation)](https://agents.md) 크로스툴 표준으로 28개+ 툴이 읽습니다.
-> 붙여넣은 뒤 **"뱃지 붙여줘"** 라고 하면 됩니다.
+> 고정해 뒀다면 그냥 **"뱃지 붙여줘"** 한마디면 됩니다.
 
 
 ---
