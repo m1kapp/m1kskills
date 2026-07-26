@@ -83,6 +83,28 @@ Then:
 
 Outside Claude Code, or when no transcript is reachable, write **"미측정"**. Do not substitute a guess.
 
+#### Then build the trajectory — the one part readers actually trust
+
+A prose list of "angles I explored" is still self-report; the author writes whatever sounds good. The same turns carry **timestamps**, and those are hard to fake without forging the transcript. Cluster them into work bursts and you get a trajectory that shows depth instead of claiming it.
+
+Split the slice wherever the gap between consecutive turns exceeds **30 minutes**. Each burst becomes one row: `{d, t, min, n, k, s}` — date, start time, duration, prompt count, what got carved, one line of detail.
+
+```python
+bursts = [[turns[0]]]
+for prev, cur in zip(turns, turns[1:]):
+    (bursts[-1] if (cur.ts - prev.ts).total_seconds() <= 1800
+     else bursts.append([]) or bursts[-1]).append(cur)
+```
+
+Render each row as a bar whose **width is proportional to duration**, not prompt count. Time-on-task is what "digging" means; ten rapid-fire tweaks are not deeper than one hour of wrestling with a formula.
+
+What makes this convincing is the shape, so don't sand it down:
+- **The long bar** is where the thinking actually happened — label it with what changed, not what was done ("격자표를 계산기로 뒤집음", not "UI 작업")
+- **Single-prompt ticks** prove the work was revisited over days rather than crammed. Keep them; they read as diligence, not noise
+- **Abandoned directions belong in the label.** "기업 케이스 매칭 시도 → 근거 부족으로 폐기" is the single most credible line a badge can carry, because nobody invents a dead end they took
+
+Fall back to the prose `angles` list only when no timestamps are available.
+
 ### Step 2 — Ask the user (only these three)
 
 - Author **full name, org, title**
@@ -156,7 +178,7 @@ Chip must be **neutral outline, monospace, tight padding** (3/9px). Loud chips c
 ```
 Author info lives **only in the footer signature (A)**. Repeating it inside the dialog is redundant and visually heavy.
 
-- **Tab 1 · 파고든 관점** — which questions were dug into, in order. **Put it first** (trust comes from the trajectory of thinking, not the count). If the list looks thin relative to hours invested, re-scan the session and fill it — 6 items for 6 hours invites doubt.
+- **Tab 1 · 파고든 궤적** — the timestamp-derived burst timeline (see Step 1). **Put it first** — trust comes from the trajectory of thinking, and this is the only tab whose data the author did not author. Bars sized by duration; label each with what changed and name the dead ends.
 - **Tab 2 · 어디까지 확인** — per-item A/B/C/D + the reason
 - **Tab 3 · 고친 것** — by round + severity (치명/중대/경미) + **current value** ("✓ 현재 H100=495 · GPU 표에서 확인"). History must connect to the artifact to be checkable. If none: "발견 0건 — 그만큼 검증 깊이가 얕았을 수 있음"
 - **Tab 4 · 직접 확인** ★ — **primary source links**. Lead line: `"이 자료를 믿지 말고 찍어보라."` Each row = [source link ↗] + [value confirmed there]. Include how to re-derive any formulas.
@@ -184,7 +206,9 @@ const PROVENANCE = {
   author:{name,title,org,dept}, period:{from,to,mode,effort},
   tool, asOf, use, rounds,               // use = intended use (Step 2); rounds = the chip's N×
   method, stats:[{v,l}],
-  grades:[{k,g,why}], angles:[[title,detail]],
+  grades:[{k,g,why}],
+  timeline:[{d,t,min,n,k,s}],          // work bursts from timestamps — the trust anchor
+  angles:[[title,detail]],               // prose fallback when no timestamps
   findings:[{r,sev,t,now}],              // now = current value in the artifact
   sources:[{t,u,n}],                     // primary source: title, URL, value confirmed
   gaps:[{item,sub,why,gain}], closing

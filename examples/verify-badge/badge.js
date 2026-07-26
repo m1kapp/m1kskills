@@ -18,11 +18,23 @@ export function mount(el, P) {
   // 칩 숫자는 검증 라운드 수(rounds). findings.length(고친 건수)와 혼동하면
   // 다이얼로그의 "N차 교차검증" 과 칩이 서로 다른 숫자를 말하게 된다.
   const rounds = P.rounds ?? null;
+  // 타임라인은 있으면 쓰고 없으면 기존 angles 목록으로 폴백(구 데이터 호환)
+  const tl = Array.isArray(P.timeline) ? P.timeline : [];
+  const maxMin = Math.max(1, ...tl.map(x => x.min || 0));
+  const totalMin = tl.reduce((s, x) => s + (x.min || 0), 0);
 
   const tabs = [
-    { id:'a', label:'파고든 관점', sub:`${P.angles.length}단계`, html:`
-      <p class="vb-lead">어떤 질문을 <b>순서대로</b> 파고들었나.</p>
-      <ol class="vb-list">${P.angles.map(x=>`<li><b>${esc(x[0])}</b> — ${esc(x[1])}</li>`).join('')}</ol>` },
+    { id:'a', label:'파고든 궤적', sub:tl.length?`${tl.length}구간 · ${totalMin}분`:`${P.angles.length}단계`, html:`
+      <p class="vb-lead">${tl.length
+        ? `실제 타임스탬프에서 뽑은 작업 구간. <b>막대 길이 = 그 구간에 머문 시간</b>이라, 어디서 오래 붙들렸는지가 그대로 보인다.`
+        : `어떤 질문을 <b>순서대로</b> 파고들었나.`}</p>
+      ${tl.length ? `<table class="vb-tl">${tl.map(x=>`<tr>
+          <td class="when">${esc(x.d)}<br><span>${esc(x.t)}</span></td>
+          <td class="bar"><i style="width:${Math.max(3, Math.round((x.min/maxMin)*100))}%"></i></td>
+          <td class="num">${x.min?esc(x.min)+'분':'—'}<br><span>${esc(x.n)}건</span></td>
+          <td><b>${esc(x.k)}</b><br><span class="sub">${esc(x.s)}</span></td>
+        </tr>`).join('')}</table>`
+        : `<ol class="vb-list">${P.angles.map(x=>`<li><b>${esc(x[0])}</b> — ${esc(x[1])}</li>`).join('')}</ol>`}` },
     { id:'b', label:'어디까지 확인', sub:'근거 수준', html:`
       <p class="vb-lead">항목마다 <b>근거의 단단함이 다르다.</b></p>
       <table class="vb-tbl">${P.grades.map(x=>`<tr><td style="width:38%"><b class="${g(x.g)}">${esc(x.g)}</b> ${esc(x.k)}</td><td>${esc(x.why)}</td></tr>`).join('')}</table>` },
