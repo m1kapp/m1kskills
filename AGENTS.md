@@ -27,10 +27,6 @@ Claude Code면 설치가 더 편합니다:
 
 ---
 
-## verify-badge
-
----
-
 # Verify Badge
 
 Attach **named accountability + verification history + a cold limits diagnosis** to a report.
@@ -59,9 +55,57 @@ Pull **only what actually happened** from conversation history:
 | Cross-check rounds | Times the user said "다시 확인", "재검증", or you revisited values |
 | **Errors actually caught** | Value corrections in history (most important signal) |
 | Unresolved assumptions | Constants picked without grounding |
-| Work period | Conversation start → end dates |
+| Prompt count · work period | Transcript — **count, don't estimate** (see below) |
 
 **If nothing was caught, say "발견 0건."** That's a deduction to disclose, not hide.
+
+#### Count the countable — never estimate prompt volume or work days
+
+Prompt count and work period look like soft numbers, so the temptation is to eyeball them ("~90 prompts, 5 days"). Don't. In Claude Code they are **exactly measurable**, and a guessed stat on a badge whose first principle is "never invent verification" discredits every other number on it.
+
+Transcripts live at `~/.claude/projects/<slugified-cwd>/*.jsonl` — one JSON object per line. A real human turn is `type == "user"` **minus** four things that also arrive as `user`:
+
+| Exclude | How it looks |
+|---|---|
+| Tool results | `message.content` array contains a `tool_result` block |
+| Injected context | `isMeta: true` |
+| System reminders | text starts with `<system-reminder>` |
+| Slash commands & their output | text starts with `<command-name>`, `<command-message>`, `<command-args>`, `<local-command-stdout>` |
+
+That last row is the one people miss — `/model`, `/clear` and the stdout echoed back afterwards all land in the transcript as `user` turns. They are not prompts about the work.
+
+```python
+import json, glob
+SKIP = ("<system-reminder>", "<command-name>", "<command-message>",
+        "<command-args>", "<local-command-stdout>")
+turns = []
+for f in glob.glob(f"{TRANSCRIPT_DIR}/*.jsonl"):
+    for line in open(f, encoding="utf-8", errors="replace"):
+        try: e = json.loads(line)
+        except: continue
+        if e.get("type") != "user" or e.get("isMeta"): continue
+        c = (e.get("message") or {}).get("content")
+        if isinstance(c, list):
+            if any(isinstance(b, dict) and b.get("type") == "tool_result" for b in c): continue
+            t = "".join(b.get("text","") for b in c if isinstance(b, dict) and b.get("type") == "text")
+        elif isinstance(c, str): t = c
+        else: continue
+        t = t.strip()
+        if not t or t.startswith(SKIP): continue
+        turns.append((e.get("timestamp","")[:10], t))
+```
+
+**A session is not one deliverable.** Long sessions drift — the calculator becomes the badge becomes an unrelated bug fix — and stray terminal pastes land mid-stream. Counting the whole session inflates the badge. So after filtering, segment:
+
+1. **Find the topic boundary.** Search the turns for where the subject changes (first mention of the next deliverable) and slice there. Print the two turns on either side and confirm the cut is where you think it is.
+2. **Drop strays inside the slice.** Pasted shell sessions, logs, and half-finished thoughts belonging to other work. Scan the slice; a paste starting with a shell prompt (`user@host$`, `Last login:`) is the usual case.
+3. **State what you counted.** "105 prompts (calculator slice; session total 177)" is honest. A bare "177" is not.
+
+Then:
+- **Prompt count** = the size of that slice, after strays.
+- **Work period** = distinct dates in the slice, **not** first-to-last span. Three active days inside a five-day window is "3일(07-22·23·26)", never "5일 분산". Report the per-day distribution when it is lopsided — hiding a final-night push is the same sin as inflating the total.
+
+Outside Claude Code, or when no transcript is reachable, write **"미측정"**. Do not substitute a guess.
 
 ### Step 2 — Ask the user (only these three)
 
@@ -211,3 +255,5 @@ Look at: amber signature color, 5-tab layout, the sources tab, findings↔curren
 - Raising a grade on request without new evidence
 - **Chip number that contradicts the dialog** (`findings.length` on a chip that reads "N× reviewed")
 - Interpolating harvested strings into HTML without escaping — the badge becomes the injection vector
+- **Estimating a countable stat** — guessing prompt volume or work days when the transcript is right there
+- Counting a whole session as one deliverable, so unrelated work inflates the number
