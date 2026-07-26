@@ -1,7 +1,7 @@
 {
   "name": "m1kskills",
   "version": "1.0.0",
-  "description": "실무에서 바로 쓰는 AI 스킬 모음 — 자료에 검증 이력을 붙이는 verify-badge, 구독 가성비 랭킹 claude-run",
+  "description": "AI 쓰다 유용했던 나만의 스킬 모음 — 어느 도구에나 붙여넣어 쓰는 마크다운 프롬프트",
   "author": {
     "name": "m1kapp",
     "url": "https://m1k.app"
@@ -21,8 +21,8 @@
   "hooks": {},
   "interface": {
     "displayName": "m1kskills",
-    "shortDescription": "실무에서 바로 쓰는 AI 스킬 모음",
-    "longDescription": "verify-badge: 리포트를 마무리할 때 실명 책임, 실제 검증 이력, 항목별 신뢰 등급(A/B/C/D), 1차 출처 링크, 아직 못 한 것까지 남기는 뱃지를 생성합니다. 도장이 아니라 감사(audit)입니다. claude-run: Claude 구독 사용량을 가성비 랭킹에 갱신합니다.",
+    "shortDescription": "AI 쓰다 유용했던 나만의 스킬 모음",
+    "longDescription": "verify-badge: 리포트를 마무리할 때 실명 책임, 실제 검증 이력, 항목별 신뢰 등급(A/B/C/D), 1차 출처 링크, 아직 못 한 것까지 남기는 뱃지를 생성합니다. 도장이 아니라 감사(audit)입니다.",
     "developerName": "m1kapp",
     "category": "Developer Tools",
     "capabilities": [

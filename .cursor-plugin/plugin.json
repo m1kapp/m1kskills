@@ -1,7 +1,7 @@
 {
   "name": "m1kskills",
   "version": "1.0.0",
-  "description": "실무에서 바로 쓰는 AI 스킬 모음 — 자료에 검증 이력을 붙이는 verify-badge, 구독 가성비 랭킹 claude-run",
+  "description": "AI 쓰다 유용했던 나만의 스킬 모음 — 어느 도구에나 붙여넣어 쓰는 마크다운 프롬프트",
   "author": {
     "name": "m1kapp",
     "url": "https://m1k.app"
