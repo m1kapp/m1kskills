@@ -12,6 +12,15 @@
 .vb-sign .dim{font-family:var(--vb-mono);font-size:10.5px;color:var(--vb-ink3)}
 .vb-chip{margin-top:8px;display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border:1px solid var(--vb-line);border-radius:4px;background:transparent;color:var(--vb-ink3);font-family:var(--vb-mono);font-size:9.5px;letter-spacing:.06em;cursor:pointer;transition:.15s}
 .vb-chip:hover{border-color:var(--vb-amber);color:var(--vb-amber)}
+/* 레벨은 등급 최저값에서 자동 산출 — 낮을수록 눈에 띄어야 세탁을 막는다 */
+.vb-chip.lv-d{border-color:var(--vb-bad);color:var(--vb-bad)}
+.vb-chip.lv-c{border-color:var(--vb-warn);color:var(--vb-warn)}
+.vb-chip.lv-a{border-color:var(--vb-good);color:var(--vb-good)}
+.vb-chip.lv-d:hover,.vb-chip.lv-c:hover,.vb-chip.lv-a:hover{opacity:.75}
+.vb-lvbox{display:flex;align-items:baseline;gap:9px;padding:9px 12px;border-radius:8px;margin:0 0 14px;background:var(--vb-surface);border-left:3px solid var(--vb-line)}
+.vb-lvbox b{font-size:13px;color:var(--vb-ink)} .vb-lvbox span{font-size:11.5px;color:var(--vb-ink3)}
+.vb-lvbox.lv-d{border-left-color:var(--vb-bad)} .vb-lvbox.lv-c{border-left-color:var(--vb-warn)}
+.vb-lvbox.lv-b{border-left-color:var(--vb-amber)} .vb-lvbox.lv-a{border-left-color:var(--vb-good)}
 .vb-chip span{font-weight:700;letter-spacing:.14em} .vb-chip em{font-style:normal;opacity:.75}
 .vb-chip svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 

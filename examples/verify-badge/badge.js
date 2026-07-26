@@ -11,6 +11,24 @@ const safeUrl = v => {
   return /^(https?:|mailto:|#|\/|\.\/|\.\.\/)/i.test(s) ? esc(s) : '#';
 };
 
+// 칩 레벨은 **작성자가 고르지 않는다.** 항목별 등급의 최저값에서 자동 산출한다.
+// 자기가 "인용 가능" 이라고 써넣을 수 있으면 칩은 다시 자기 홍보가 된다.
+// 원칙: 가장 약한 고리가 그 자료의 수준이다. 1차 출처가 하나도 없으면 무조건 최하.
+const LEVELS = {
+  D: { t:'스스로 더 검증하세요', c:'d', w:'핵심 항목에 미검증이 있다' },
+  C: { t:'부분 검증 — 자릿수만', c:'c', w:'가정이 결과를 좌우한다' },
+  B: { t:'참고자료로 사용 가능', c:'b', w:'비교·후보 좁히기까지' },
+  A: { t:'그대로 인용 가능',     c:'a', w:'전 항목 1차 출처·물리 계산' },
+};
+function levelOf(P) {
+  const gs = (P.grades || []).map(x => x.g).filter(Boolean);
+  if (!gs.length) return { ...LEVELS.D, w:'항목별 등급이 기재되지 않았다' };
+  // 확인 경로(1차 출처)가 없으면 등급이 뭐든 최하 — 독자가 대조할 방법이 없다
+  if (!(P.sources || []).length) return { ...LEVELS.D, w:'1차 출처가 없어 대조할 방법이 없다' };
+  const worst = ['D','C','B','A'].find(k => gs.includes(k));
+  return LEVELS[worst] || LEVELS.D;
+}
+
 export function mount(el, P) {
   const g = x => x==='A'?'vb-g-a':x==='B'?'vb-g-b':x==='C'?'vb-g-c':'vb-g-d';
   const s = x => x==='치명'?'hi':x==='중대'?'mid':'lo';
@@ -22,6 +40,7 @@ export function mount(el, P) {
   const tl = Array.isArray(P.timeline) ? P.timeline : [];
   const maxMin = Math.max(1, ...tl.map(x => x.min || 0));
   const totalMin = tl.reduce((s, x) => s + (x.min || 0), 0);
+  const lv = levelOf(P);
 
   const tabs = [
     { id:'a', label:'파고든 궤적', sub:tl.length?`${tl.length}구간 · ${totalMin}분`:`${P.angles.length}단계`, html:`
@@ -36,7 +55,8 @@ export function mount(el, P) {
         </tr>`).join('')}</table>`
         : `<ol class="vb-list">${P.angles.map(x=>`<li><b>${esc(x[0])}</b> — ${esc(x[1])}</li>`).join('')}</ol>`}` },
     { id:'b', label:'어디까지 확인', sub:'근거 수준', html:`
-      <p class="vb-lead">항목마다 <b>근거의 단단함이 다르다.</b></p>
+      <p class="vb-lead">항목마다 <b>근거의 단단함이 다르다.</b> 아래 <b>최저 등급이 곧 칩의 레벨</b>이다 — 가장 약한 고리가 이 자료의 수준이라서.</p>
+      <div class="vb-lvbox lv-${lv.c}"><b>${esc(lv.t)}</b><span>${esc(lv.w)}</span></div>
       <table class="vb-tbl">${P.grades.map(x=>`<tr><td style="width:38%"><b class="${g(x.g)}">${esc(x.g)}</b> ${esc(x.k)}</td><td>${esc(x.why)}</td></tr>`).join('')}</table>` },
     { id:'c', label:'고친 것', sub:`${P.findings.length}건`, html:`
       <p class="vb-lead">검증 라운드마다 <b>실제로 틀려서 수정한 것들.</b></p>
@@ -55,9 +75,9 @@ export function mount(el, P) {
   <footer class="vb-sign">
     <div class="line"><b>Made by</b> ${esc(A.org)} ${esc(A.dept)} ${esc(A.name)} ${esc(A.title)} · <b>Powered by</b> ${esc(P.tool)}</div>
     <div class="line dim">© ${esc(String(P.asOf).slice(0,4))} ${esc(A.org)}${P.use?` · ${esc(P.use)}`:''} · 데이터 기준일 ${esc(P.asOf)}</div>
-    <button class="vb-chip" data-open="${dlgId}">
+    <button class="vb-chip lv-${lv.c}" data-open="${dlgId}" title="${esc(lv.w)}">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 6v6c0 5 3.4 8.9 8 10 4.6-1.1 8-5 8-10V6z"/><path d="m9 12 2 2 4-4"/></svg>
-      <span>VERIFIED</span>${rounds?`<em>${esc(rounds)}× reviewed</em>`:''}
+      <span>${esc(lv.t)}</span>${rounds?`<em>${esc(rounds)}× reviewed</em>`:''}
     </button>
   </footer>
   <dialog class="vb-dlg" id="${dlgId}" aria-label="제작·검증 이력">

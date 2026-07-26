@@ -165,6 +165,21 @@ Made by {org} {author} · Powered by {AI tool}
 © {year} {company} · {use} · 데이터 기준일 {date}
             [ ⛨ VERIFIED │ N× reviewed ]     ← click → (B)
 ```
+**The chip label is a readiness level, and it is DERIVED — never authored.** A chip that always reads "VERIFIED" carries no information: a report graded A throughout and one graded D throughout look identical, so the badge launders the weak one for any reader who does not open it. Compute the level from `grades` instead, and let the author's own honesty set it:
+
+| Level | Chip text | Condition |
+|---|---|---|
+| D | `스스로 더 검증하세요` | any key metric is D · **or** `sources` is empty · **or** no grades recorded |
+| C | `부분 검증 — 자릿수만` | worst grade is C |
+| B | `참고자료로 사용 가능` | worst grade is B |
+| A | `그대로 인용 가능` | every metric is A |
+
+**Weakest link sets the level** — averaging hides the one number that will break someone's decision. And no primary sources means level D regardless of grades: without a check path the reader cannot dispute anything, so the grades are unfalsifiable.
+
+Say *what to do*, not what grade it got. "스스로 더 검증하세요" is actionable; "●○○" needs a legend. Put the reason on hover (`title`) and repeat the level at the top of the grades tab so opening the dialog explains the chip.
+
+If the author asks to raise the level, the answer is to raise the evidence — add a primary source, run the measurement. Editing the label directly is forbidden.
+
 **N = cross-check rounds (`rounds`), never `findings.length`.** They are different numbers — rounds is how many times you re-verified, findings is how many errors that surfaced. Bind the chip to the wrong one and the badge contradicts its own stat cards ("6차 교차검증" inside, "3× reviewed" on the chip). If rounds is unknown, omit the `N×` segment entirely rather than substituting a number that happens to be available.
 
 Chip must be **neutral outline, monospace, tight padding** (3/9px). Loud chips cheapen the document. Amber only on hover.
@@ -255,5 +270,7 @@ Look at: amber signature color, 5-tab layout, the sources tab, findings↔curren
 - Raising a grade on request without new evidence
 - **Chip number that contradicts the dialog** (`findings.length` on a chip that reads "N× reviewed")
 - Interpolating harvested strings into HTML without escaping — the badge becomes the injection vector
+- **A chip that reads the same no matter how weak the report is** — it launders bad work past anyone who doesn't open it
+- Hand-writing the readiness level instead of deriving it from the worst grade
 - **Estimating a countable stat** — guessing prompt volume or work days when the transcript is right there
 - Counting a whole session as one deliverable, so unrelated work inflates the number
