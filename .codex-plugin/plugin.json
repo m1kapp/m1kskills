@@ -1,0 +1,40 @@
+{
+  "name": "m1kskills",
+  "version": "1.0.0",
+  "description": "검증 이력 뱃지 등 실무 스킬 모음 — AI로 만든 자료에 실명 책임·신뢰 등급·1차 출처를 붙인다.",
+  "author": {
+    "name": "m1kapp",
+    "url": "https://m1k.app"
+  },
+  "homepage": "https://github.com/m1kapp/m1kskills",
+  "repository": "https://github.com/m1kapp/m1kskills",
+  "license": "MIT",
+  "keywords": [
+    "skills",
+    "verification",
+    "audit",
+    "provenance",
+    "report",
+    "trust"
+  ],
+  "skills": "./skills/",
+  "hooks": {},
+  "interface": {
+    "displayName": "m1kskills",
+    "shortDescription": "AI 자료에 검증 이력·신뢰 등급을 붙이는 실무 스킬 모음",
+    "longDescription": "리포트·분석 자료를 마무리할 때 실명 책임, 실제 검증 이력, 항목별 신뢰 등급(A/B/C/D), 1차 출처 링크, 아직 못 한 것까지 남기는 뱃지를 생성합니다. 도장이 아니라 감사(audit)입니다.",
+    "developerName": "m1kapp",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "이 리포트에 검증 이력 뱃지 붙여줘.",
+      "이 자료 신뢰도 어느 정도야?"
+    ],
+    "websiteURL": "https://github.com/m1kapp/m1kskills",
+    "brandColor": "#a8761a"
+  }
+}

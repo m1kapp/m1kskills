@@ -1,2 +1,5 @@
 .DS_Store
 *.html
+
+# 예제 데모는 배포물 — 위 *.html 무시에서 제외
+!examples/**/*.html
