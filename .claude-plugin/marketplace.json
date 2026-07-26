@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
   "name": "m1kskills",
-  "description": "AI로 만든 자료에 신뢰를 붙이는 스킬 모음 — 검증 이력 뱃지, 사용량 랭킹 등",
+  "description": "실무에서 바로 쓰는 AI 스킬 모음 — 자료에 검증 이력을 붙이는 verify-badge, 구독 가성비 랭킹 claude-run",
   "owner": {
     "name": "m1kapp",
     "url": "https://m1k.app"

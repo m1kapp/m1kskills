@@ -1,7 +1,7 @@
 {
   "name": "m1kskills",
   "version": "1.0.0",
-  "description": "검증 이력 뱃지 등 실무 스킬 모음 — AI로 만든 자료에 실명 책임·신뢰 등급·1차 출처를 붙인다.",
+  "description": "실무에서 바로 쓰는 AI 스킬 모음 — 자료에 검증 이력을 붙이는 verify-badge, 구독 가성비 랭킹 claude-run",
   "author": {
     "name": "m1kapp",
     "url": "https://m1k.app"

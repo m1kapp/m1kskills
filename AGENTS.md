@@ -1,11 +1,10 @@
-# m1kskills — 범용 프롬프트
+# verify-badge — 범용 프롬프트
 
-AI로 만든 자료에 신뢰를 붙이는 스킬 모음. 스킬 본문은 그냥 마크다운이라 **어느 AI에나 붙여넣으면 작동**합니다.
+리포트·분석 자료에 **검증 이력 뱃지**를 붙입니다 — 실명 책임 + 실제 검증 이력 + 냉정한 한계 진단.
+본문이 그냥 마크다운이라 **어느 AI에나 붙여넣으면 작동**합니다. 준비물 없음.
 
-| 스킬 | 하는 일 | 원본 |
-|---|---|---|
-| **verify-badge** | 리포트에 검증 이력 뱃지 — 실명 책임·신뢰 등급(A/B/C/D)·1차 출처·못 한 것 | [`skills/verify-badge/SKILL.md`](skills/verify-badge/SKILL.md) |
-| claude-run | 내 Claude 사용량을 가성비 랭킹에 갱신 | [`plugins/claude-run/skills/`](plugins/claude-run/skills/) — Claude Code 전용(스크립트 의존) |
+> [m1kskills](https://github.com/m1kapp/m1kskills) 의 스킬 하나입니다.
+> 원본: [`skills/verify-badge/SKILL.md`](skills/verify-badge/SKILL.md)
 
 ## 가져다 쓰는 법
 

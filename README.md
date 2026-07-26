@@ -1,7 +1,11 @@
 # m1kskills
 
-**AI로 만든 자료에 신뢰를 붙이는 스킬 모음.**
-Claude Code면 플러그인으로 설치, 그 외 도구는 [`AGENTS.md`](AGENTS.md) 복붙으로 씁니다.
+**실무에서 바로 쓰는 AI 스킬 모음.**
+
+| 스킬 | 하는 일 | 부르는 법 | 준비물 |
+|---|---|---|---|
+| **verify-badge** | 자료에 **검증 이력 뱃지** — 실명 책임·신뢰 등급·1차 출처·못 한 것 | "뱃지 붙여줘" | **없음** — 순수 프롬프트라 어느 AI에나 |
+| **claude-run** | Claude 구독 **가성비 랭킹**에 내 사용량 갱신 | `/claude-run` | python3 · node (Claude Code 전용) |
 
 ```
 /plugin marketplace add m1kapp/m1kskills
@@ -10,11 +14,7 @@ Claude Code면 플러그인으로 설치, 그 외 도구는 [`AGENTS.md`](AGENTS
 ```
 
 > 설치 후 `/reload-plugins` 한 번.
-
-| 스킬 | 부르는 법 | 준비물 |
-|---|---|---|
-| **verify-badge** | 리포트 마무리하며 **"뱃지 붙여줘"** | 없음 — 순수 프롬프트 |
-| **claude-run** | `/claude-run` | python3 · node |
+> `verify-badge` 는 Claude Code가 아니어도 씁니다 — [3줄 부트스트랩](#claude-code가-아니어도-씁니다)
 
 ---
 
