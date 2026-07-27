@@ -131,6 +131,26 @@ const PROVENANCE = {
 renderProvenance(PROVENANCE);
 ```
 
+**문서에 이미 배지가 있으면 새로 만들지 말고 갱신한다.** 이 스킬은 같은 산출물에 **여러 번 불린다** — gap을 닫을 때마다, 수치가 바뀔 때마다. 그때 이어받을 수 있으려면 데이터가 문서 안에 남아 있어야 한다.
+
+```html
+<script type="application/json" id="vb-provenance">{ ... }</script>
+<div id="vb-badge"></div>
+<script type="module">
+  import { mount } from './badge.js';
+  mount(document.getElementById('vb-badge'),
+        JSON.parse(document.getElementById('vb-provenance').textContent));
+</script>
+```
+
+재실행 절차는 **읽고 → 고치고 → 다시 렌더**다.
+
+1. `#vb-provenance`를 찾는다. 있으면 그 객체를 **읽어서 이어받는다** — 없으면 새로 만든다
+2. 바뀐 필드만 고친다. `findings`는 **추가**, `gaps`는 해소분 **삭제**, `grades`는 근거가 올라간 항목만 승급
+3. 객체를 다시 써넣고 `mount()`를 다시 부른다. `innerHTML` 통째 교체라 중복 배지가 생기지 않는다
+
+**절대 HTML을 손으로 고치지 마라.** 이 스킬을 처음 실전 적용했을 때 렌더러를 쓰지 않고 마크업을 직접 써서, 갱신할 때마다 문자열을 손으로 바꿨다. 그 결과 **탭 부제 숫자가 실제 행 수와 계속 어긋났다**(발견 13→23건으로 늘었는데 부제는 그대로). 파생값은 사람이 다시 세면 반드시 틀린다 — 객체만 고치고 파생은 렌더러에 맡긴다.
+
 **Escape on the way out.** You fill this object from harvested session data — search-result titles, source URLs, values copied off pages. That is external text on a normal path, so the renderer must HTML-escape every field and allowlist `href` schemes (`https?:`/`mailto:`/relative only). A badge that ships an injection hole is not a trust artifact.
 
 Match the format to the medium: HTML report → `<dialog>` + tabs; markdown → `<details>` sections; slides → text block.
@@ -182,6 +202,9 @@ Look at: amber signature color, 5-tab layout, the sources tab, findings↔curren
 - **gap을 적어놓고 닫으려 시도조차 안 함** — 30분 안에 되는 것이 남아 있으면 배지가 아니라 알리바이다
 - **URL을 열지 않고 출처에 적음** — 링크를 붙이는 행위가 검증 단계다. 열어본 것만 `u`를 채운다
 - **표에 `<thead>`가 없음** — 열이 3개만 넘어도 무엇을 보는지 알 수 없다
+- **배지를 갱신하지 않고 새로 만듦** — 같은 산출물에 배지가 둘이 되거나, 옛 수치가 남는다
+- **PROVENANCE를 문서에 안 남김** — 다음 실행이 이어받을 수 없어 매번 처음부터 다시 센다
+- **렌더링된 HTML을 손으로 고침** — 파생값(탭 부제·칩 숫자)이 반드시 어긋난다. 객체만 고친다
 
 - Stamping "5차 검증" when it wasn't done
 - Grading everything A
