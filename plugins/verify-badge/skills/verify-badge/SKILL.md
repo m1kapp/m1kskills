@@ -1,7 +1,14 @@
 ---
 name: verify-badge
 description: Attach a verification-history badge when finishing a report, analysis, or calculator. This is an audit, not a rubber stamp — record only what was actually verified, grade confidence coldly, and state what still needs digging. Use for "뱃지 붙여줘", "검증 이력", "이 리포트 신뢰도", "verify-badge", or when wrapping up / sharing any analytical deliverable.
+allowed-tools: Bash(python3 *) Read Write Edit Glob
 ---
+
+## Measured evidence (already computed — do not re-derive)
+
+```!
+python3 "${CLAUDE_SKILL_DIR}/scripts/measure.py" 2>&1 || echo "미측정 — 트랜스크립트 접근 불가"
+```
 
 # Verify Badge
 
@@ -35,79 +42,19 @@ Pull **only what actually happened** from conversation history:
 
 **If nothing was caught, say "발견 0건."** That's a deduction to disclose, not hide.
 
-#### Count the countable — never estimate prompt volume or work days
+#### The numbers are already measured — do not re-derive them
 
-Prompt count and work period look like soft numbers, so the temptation is to eyeball them ("~90 prompts, 5 days"). Don't. In Claude Code they are **exactly measurable**, and a guessed stat on a badge whose first principle is "never invent verification" discredits every other number on it.
+The block at the top of this file ran `scripts/measure.py` before you saw any of this, so the burst table and the JSON line are **already in your context**. Read them; do not open transcripts yourself. Hand-counting is slower and it is where the mistakes live — UTC rendered as local time, slash-command echoes counted as prompts, notification blocks counted as human turns. The script filters all of that.
 
-Transcripts live at `~/.claude/projects/<slugified-cwd>/*.jsonl` — one JSON object per line. A real human turn is `type == "user"` **minus** four things that also arrive as `user`:
+What the script cannot decide, and you must:
 
-| Exclude | How it looks |
-|---|---|
-| Tool results | `message.content` array contains a `tool_result` block |
-| Injected context | `isMeta: true` |
-| System reminders | text starts with `<system-reminder>` |
-| Slash commands & their output | text starts with `<command-name>`, `<command-message>`, `<command-args>`, `<local-command-stdout>` |
+1. **Which slice is this deliverable.** The table covers the whole session, and long sessions drift. Find where the topic changed, cut there, and **say what you counted** — "105건(계산기 구간; 세션 전체 191)". A bare session total is dishonest.
+2. **What each burst carved.** The script prints each burst's opening prompt; turn that into a label describing *what changed*, not what was done. Name the dead ends — an abandoned direction is the most credible line a badge can carry.
+3. **Work period** = the distinct dates in your slice, never first-to-last span. Three active days in a five-day window is `3일`, not `5일 분산`.
 
-That last row is the one people miss — `/model`, `/clear` and the stdout echoed back afterwards all land in the transcript as `user` turns. They are not prompts about the work.
+If the script reports `미측정`, write 미측정. Never substitute a guess.
 
-```python
-import json, glob
-SKIP = ("<system-reminder>", "<command-name>", "<command-message>",
-        "<command-args>", "<local-command-stdout>")
-turns = []
-for f in glob.glob(f"{TRANSCRIPT_DIR}/*.jsonl"):
-    for line in open(f, encoding="utf-8", errors="replace"):
-        try: e = json.loads(line)
-        except: continue
-        if e.get("type") != "user" or e.get("isMeta"): continue
-        c = (e.get("message") or {}).get("content")
-        if isinstance(c, list):
-            if any(isinstance(b, dict) and b.get("type") == "tool_result" for b in c): continue
-            t = "".join(b.get("text","") for b in c if isinstance(b, dict) and b.get("type") == "text")
-        elif isinstance(c, str): t = c
-        else: continue
-        t = t.strip()
-        if not t or t.startswith(SKIP): continue
-        turns.append((e.get("timestamp","")[:10], t))
-```
-
-**A session is not one deliverable.** Long sessions drift — the calculator becomes the badge becomes an unrelated bug fix — and stray terminal pastes land mid-stream. Counting the whole session inflates the badge. So after filtering, segment:
-
-1. **Find the topic boundary.** Search the turns for where the subject changes (first mention of the next deliverable) and slice there. Print the two turns on either side and confirm the cut is where you think it is.
-2. **Drop strays inside the slice.** Pasted shell sessions, logs, and half-finished thoughts belonging to other work. Scan the slice; a paste starting with a shell prompt (`user@host$`, `Last login:`) is the usual case.
-3. **State what you counted.** "105 prompts (calculator slice; session total 177)" is honest. A bare "177" is not.
-
-Then:
-- **Prompt count** = the size of that slice, after strays.
-- **Work period** = distinct dates in the slice, **not** first-to-last span. Three active days inside a five-day window is "3일(07-22·23·26)", never "5일 분산". Report the per-day distribution when it is lopsided — hiding a final-night push is the same sin as inflating the total.
-
-Outside Claude Code, or when no transcript is reachable, write **"미측정"**. Do not substitute a guess.
-
-#### Then build the trajectory — the one part readers actually trust
-
-A prose list of "angles I explored" is still self-report; the author writes whatever sounds good. The same turns carry **timestamps**, and those are hard to fake without forging the transcript. Cluster them into work bursts and you get a trajectory that shows depth instead of claiming it.
-
-**Convert to the author's local timezone first.** Transcript timestamps are UTC (`...Z`); rendering them raw shifts every burst by the offset and can move work onto the wrong day. Verify against something local in the transcript — a pasted shell banner (`Last login: ... KST`) settles it. Then split the slice wherever the gap between consecutive turns exceeds **30 minutes**. Group bursts by date: `{d, wd, rows:[{t, min, n, k, s}]}` — the date and weekday become a header row (with that day's subtotal) and each burst row carries only the start time. Repeating the date on every row wastes the column and hides the day rhythm. Render durations as `N시간 M분` once they pass an hour; a bare `399분` is unreadable.
-
-```python
-bursts = [[turns[0]]]
-for prev, cur in zip(turns, turns[1:]):
-    (bursts[-1] if (cur.ts - prev.ts).total_seconds() <= 1800
-     else bursts.append([]) or bursts[-1]).append(cur)
-```
-
-Render each row as a bar whose **width is proportional to duration**, not prompt count. Time-on-task is what "digging" means; ten rapid-fire tweaks are not deeper than one hour of wrestling with a formula.
-
-What makes this convincing is the shape, so don't sand it down:
-- **The long bar** is where the thinking actually happened — label it with what changed, not what was done ("격자표를 계산기로 뒤집음", not "UI 작업")
-- **Single-prompt ticks** prove the work was revisited over days rather than crammed. Keep them; they read as diligence, not noise
-- **Abandoned directions belong in the label.** "기업 케이스 매칭 시도 → 근거 부족으로 폐기" is the single most credible line a badge can carry, because nobody invents a dead end they took
-
-**Keep the prose list only for what the timeline cannot say.** A burst label already states what changed in that stretch, so an "angles I explored" entry covering the same ground is duplication — and calling it "질문 N가지" when N does not match the burst count is simply false. Cut every prose item a burst label already covers; keep only **conclusions with numbers attached** ("SXM NVLink 900GB/s 실효율 75~85% vs PCIe 64GB/s 20~30%", "손익분기 AWS 6개월·Elice 14.5개월"). Title it accordingly — 확정한 판단, not 파고든 질문.
-
-The division of labour: **timeline = when and what you did (log, hard to fake); prose list = what you concluded (content).** If an item does not clearly belong to one of those, it belongs in the report body, not the badge.
-
-Fall back to the prose list entirely only when no timestamps are available.
+Methodology, filter rules and the manual fallback: [`reference/measuring.md`](reference/measuring.md).
 
 ### Step 2 — Ask the user (only these three)
 
@@ -155,88 +102,19 @@ If the use is heavy but evidence is thin, say it flat: "이 상태로 고객 제
 
 #### Design spec
 
-**Signature color = amber/gold.** Must differ from the document's own accent. Amber reads as certificate/seal/signature, matching "verified", and won't clash with typical teal/blue body accents.
-```css
---amber:#a8761a; --amber-soft:#f5ead6;   /* light */
---amber:#d9a441; --amber-soft:#2e2413;   /* dark  */
-```
-Use amber on: stat numbers, active tab underline, source links, action text, chip hover.
-Reusing the body accent makes it read as "just another section."
+Full layout, colour, tab and widget spec: **[`reference/design.md`](reference/design.md)** — read it only when you are building an HTML badge. For markdown (`<details>` sections) or slides, the data model below is all you need.
 
-**(A) Footer signature + mini chip** — bottom of document (copyright position)
-```
-Made by {org} {author} · Powered by {AI tool}
-© {year} {company} · {use} · 데이터 기준일 {date}
-            [ ⛨ VERIFIED │ N× reviewed ]     ← click → (B)
-```
-**The chip label is a readiness level, and it is DERIVED — never authored.** A chip that always reads "VERIFIED" carries no information: a report graded A throughout and one graded D throughout look identical, so the badge launders the weak one for any reader who does not open it. Compute the level from `grades` instead, and let the author's own honesty set it:
+**Do not write the renderer — it ships with this skill.**
 
-| Level | Chip text | Icon | Condition |
-|---|---|---|---|
-| D | `VERIFY BEFORE USE` | magnifier | any key metric is D · **or** `sources` is empty · **or** no grades recorded |
-| C | `DIRECTIONAL ONLY` | compass | worst grade is C |
-| B | `REFERENCE ONLY` | book | worst grade is B |
-| A | `CITE AS-IS` | shield-check | every metric is A |
+| File | Use |
+|---|---|
+| `assets/badge.js` | `mount(el, PROVENANCE)` — signature, chip, dialog, tabs, timeline, level widget |
+| `assets/badge.css` | amber signature colour, light/dark, fixed tab height |
+| `assets/provenance.example.js` | a filled-in object to copy the shape from |
 
-Keep the labels **short and English** even in a Korean document — they sit in a monospace chip where a Korean phrase wraps, and terms like "자릿수만" need a legend to parse. The Korean explanation belongs on hover and in the widget.
+Copy the two assets next to the document and author **only the data object**. Re-generating the renderer each time costs hundreds of output tokens and quietly drops hard-won details — HTML escaping, the `javascript:` scheme block, derived chip levels, keyboard tab navigation. If the medium is not HTML, keep the same data object and render it as `<details>` sections or a text block.
 
-**Differentiate by icon, not colour.** A red or amber chip makes the whole document look alarming, which quietly punishes the author for grading honestly — exactly the incentive this skill must not create. Keep the chip neutral grey at every level and let the icon carry the meaning.
-
-**Put the level widget at the top of the dialog**, above the stat cards — it is the answer to "can I use this", so it should not be buried in a tab. Give it an `!` button that opens the four levels **in a nested dialog**, not an inline expander — the panel pushes everything below it and makes the dialog jump, the exact instability the fixed tab height was introduced to avoid. Keep that table on one line per row (`white-space: nowrap`, generous dialog width); a wrapped condition column reads as noise. Mark the current level so the reader sees both the ceiling and the distance to it.
-
-**Weakest link sets the level** — averaging hides the one number that will break someone's decision. And no primary sources means level D regardless of grades: without a check path the reader cannot dispute anything, so the grades are unfalsifiable.
-
-Say *what to do*, not what grade it got. "스스로 더 검증하세요" is actionable; "●○○" needs a legend. Put the reason on hover (`title`) and repeat the level at the top of the grades tab so opening the dialog explains the chip.
-
-If the author asks to raise the level, the answer is to raise the evidence — add a primary source, run the measurement. Editing the label directly is forbidden.
-
-**N = cross-check rounds (`rounds`), never `findings.length`.** They are different numbers — rounds is how many times you re-verified, findings is how many errors that surfaced. Bind the chip to the wrong one and the badge contradicts its own stat cards ("6차 교차검증" inside, "3× reviewed" on the chip). If rounds is unknown, omit the `N×` segment entirely rather than substituting a number that happens to be available.
-
-Chip must be **neutral outline, monospace, tight padding** (3/9px). Loud chips cheapen the document. Amber only on hover.
-
-**(B) Detail dialog** — compact header, then tabs
-
-```
-[ ⌖ DIRECTIONAL ONLY   가정이 결과를 좌우 — 방향·자릿수 감만        [!] ]
-105 프롬프트 · 6차 교차검증 · 6시간 39분 실투입 · 3일 실작업 · 2026-07-26 기준 · Claude Opus 5
-──────────────────────────────────────────────────────────────────
- ①            ②            ③            ④            ⑤
-어떻게 팠나   얼마나 믿나   뭘 틀렸나    어디서 왔나   뭘 못했나
- 12구간      최저 C·4항목  6건·치명 3   1차 출처 8   3건 미검증
-```
-
-Author info lives **only in the footer signature (A)**. Repeating it inside the dialog is redundant and visually heavy.
-
-**Header: one widget, one line.** The readiness widget answers "can I use this"; a single measured line answers "how hard was this worked". Resist stat *cards* — four boxes eat vertical space and end up repeating what the tab subtitles already say. Any figure that appears both in the header and in a tab subtitle must be cut from one of them.
-
-**Name tabs after the reader's questions, not your artifacts.** "어디까지 확인" and "직접 확인" both contain 확인 and cannot be told apart; "고친 것" does not say what was fixed. Five parallel questions in the same grammatical form read as one set and need no legend:
-
-| # | Tab | Subtitle carries |
-|---|---|---|
-| ① | 어떻게 팠나 | burst count |
-| ② | 얼마나 믿나 | **worst grade** + item count |
-| ③ | 뭘 틀렸나 | findings + how many 치명 |
-| ④ | 어디서 왔나 | primary-source count |
-| ⑤ | 뭘 못했나 | unverified count |
-
-**Subtitles must carry information, not labels.** "근거 수준" tells the reader nothing — "최저 C · 4항목" tells them the verdict before they click. Number the tabs (①–⑤); it signals these are read in order, and the numbered badge gives the active tab a second visual anchor besides the underline.
-
-Each tab gets a **one-line lead sentence** so the reader knows what they're looking at.
-
-**UX spec**
-- Tab panels: **fixed height + internal scroll** (e.g. `height:340px; overflow-y:auto`). Varying heights make the dialog jump.
-- Dialog width generous (≈860px); use two-column layout where it fits.
-- Close on backdrop click; lock `body` scroll while open.
-
-**(C) Usage scope belongs in the body** — not inside the badge
-Badge = "how hard this was worked." Body banner = "so how far can you use it." Mixing them blurs both.
-```
-●●● 그대로 인용   {physics / primary-source items}
-●●○ 상대 비교만   {assumption / market-rate items}
-🔴 사용 금지      {client proposals · SLA · final conclusions}
-```
-
-**Data/render separation (required for reuse)**
+**Data/render separation**
 Collect data in one object; a renderer draws it. Swapping reports = swapping this object.
 ```js
 const PROVENANCE = {

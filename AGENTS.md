@@ -59,6 +59,20 @@ Pull **only what actually happened** from conversation history:
 
 **If nothing was caught, say "발견 0건."** That's a deduction to disclose, not hide.
 
+#### The numbers are already measured — do not re-derive them
+
+The block at the top of this file ran `scripts/measure.py` before you saw any of this, so the burst table and the JSON line are **already in your context**. Read them; do not open transcripts yourself. Hand-counting is slower and it is where the mistakes live — UTC rendered as local time, slash-command echoes counted as prompts, notification blocks counted as human turns. The script filters all of that.
+
+What the script cannot decide, and you must:
+
+1. **Which slice is this deliverable.** The table covers the whole session, and long sessions drift. Find where the topic changed, cut there, and **say what you counted** — "105건(계산기 구간; 세션 전체 191)". A bare session total is dishonest.
+2. **What each burst carved.** The script prints each burst's opening prompt; turn that into a label describing *what changed*, not what was done. Name the dead ends — an abandoned direction is the most credible line a badge can carry.
+3. **Work period** = the distinct dates in your slice, never first-to-last span. Three active days in a five-day window is `3일`, not `5일 분산`.
+
+If the script reports `미측정`, write 미측정. Never substitute a guess.
+
+**Outside Claude Code there is no script — count by hand using the method below.**
+
 #### Count the countable — never estimate prompt volume or work days
 
 Prompt count and work period look like soft numbers, so the temptation is to eyeball them ("~90 prompts, 5 days"). Don't. In Claude Code they are **exactly measurable**, and a guessed stat on a badge whose first principle is "never invent verification" discredits every other number on it.
@@ -133,6 +147,8 @@ The division of labour: **timeline = when and what you did (log, hard to fake); 
 
 Fall back to the prose list entirely only when no timestamps are available.
 
+
+
 ### Step 2 — Ask the user (only these three)
 
 - Author **full name, org, title**
@@ -176,6 +192,8 @@ No praise. Write **what to do next**.
 If the use is heavy but evidence is thin, say it flat: "이 상태로 고객 제안에 쓰면 안 된다."
 
 ### Step 5 — Build the artifacts
+
+#### Design spec
 
 #### Design spec
 
@@ -260,7 +278,13 @@ Badge = "how hard this was worked." Body banner = "so how far can you use it." M
 🔴 사용 금지      {client proposals · SLA · final conclusions}
 ```
 
-**Data/render separation (required for reuse)**
+
+
+**Write the renderer once, then never again.**
+
+`mount(el, PROVENANCE)` draws the signature, chip, dialog, tabs, timeline and level widget; a stylesheet carries the amber signature colour, light/dark and the fixed tab height. Build both once from the spec above, keep them beside the document, and author **only the data object** for every later report. (Installed as a Claude Code plugin these ship prebuilt in `assets/`; ready-made copies also live at <https://github.com/m1kapp/m1kskills/tree/main/examples/verify-badge>.) Re-generating the renderer each time costs hundreds of output tokens and quietly drops hard-won details — HTML escaping, the `javascript:` scheme block, derived chip levels, keyboard tab navigation. If the medium is not HTML, keep the same data object and render it as `<details>` sections or a text block.
+
+**Data/render separation**
 Collect data in one object; a renderer draws it. Swapping reports = swapping this object.
 ```js
 const PROVENANCE = {
