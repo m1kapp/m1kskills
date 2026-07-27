@@ -104,50 +104,28 @@ If the use is heavy but evidence is thin, say it flat: "이 상태로 고객 제
 
 Full layout, colour, tab and widget spec: **[`reference/design.md`](reference/design.md)** — read it only when you are building an HTML badge. For markdown (`<details>` sections) or slides, the data model below is all you need.
 
-**Do not write the renderer — it ships with this skill.**
+**렌더러도 HTML도 쓰지 않는다. JSON 하나만 만들고 스크립트에 넘긴다.**
 
-| File | Use |
+```bash
+python3 "${CLAUDE_SKILL_DIR}/scripts/attach.py" <문서.html> <provenance.json>
+```
+
+이게 이 스킬에서 가장 빠른 경로다. 배지를 매번 손으로 그리면 수백 토큰이 나가고,
+그때마다 **이스케이프·`javascript:` 차단·레벨 산출·키보드 탭 이동이 조용히 빠진다.**
+코드는 고정, 데이터만 바뀐다.
+
+| 자산 | 쓰임 |
 |---|---|
-| `assets/badge.js` | `mount(el, PROVENANCE)` — signature, chip, dialog, tabs, timeline, level widget |
-| `assets/badge.css` | amber signature colour, light/dark, fixed tab height |
-| `assets/provenance.example.js` | a filled-in object to copy the shape from |
+| `assets/badge.inline.html` | 단일 HTML 산출물(아티팩트)용 — `<style>` + JSON 태그 + 렌더러 한 덩어리. import 불필요 |
+| `assets/badge.js` · `badge.css` | 파일을 나눠 둘 수 있는 문서용 (`mount(el, P)`) |
+| `assets/provenance.example.js` | 채워진 객체 — 모양을 여기서 베낀다 |
 
-Copy the two assets next to the document and author **only the data object**. Re-generating the renderer each time costs hundreds of output tokens and quietly drops hard-won details — HTML escaping, the `javascript:` scheme block, derived chip levels, keyboard tab navigation. If the medium is not HTML, keep the same data object and render it as `<details>` sections or a text block.
+`attach.py` 는 **멱등**하다. `#vb-provenance` 가 있으면 JSON 만 갈아끼우고, 없으면
+인라인 블록을 `</body>` 앞에 넣는다. 같은 입력으로 몇 번을 돌려도 파일이 동일하다.
 
-**Data/render separation**
-Collect data in one object; a renderer draws it. Swapping reports = swapping this object.
-```js
-const PROVENANCE = {
-  author:{name,title,org,dept}, period:{from,to,mode,effort},
-  tool, asOf, use, rounds,               // use = intended use (Step 2); rounds = the chip's N×
-  method, stats:[{v,l}],
-  grades:[{k,g,why}],
-  timeline:[{d,t,min,n,k,s}],          // work bursts from timestamps — the trust anchor
-  angles:[[title,detail]],               // prose fallback when no timestamps
-  findings:[{r,sev,t,now}],              // now = current value in the artifact
-  sources:[{t,u,n,r}],                   // 출처·URL(연 것만)·확인한 값·재현 명령(내부 측정)
-  gaps:[{item,sub,why,gain}], closing
-};
-renderProvenance(PROVENANCE);
-```
-
-**문서에 이미 배지가 있으면 새로 만들지 말고 갱신한다.** 이 스킬은 같은 산출물에 **여러 번 불린다** — gap을 닫을 때마다, 수치가 바뀔 때마다. 그때 이어받을 수 있으려면 데이터가 문서 안에 남아 있어야 한다.
-
-```html
-<script type="application/json" id="vb-provenance">{ ... }</script>
-<div id="vb-badge"></div>
-<script type="module">
-  import { mount } from './badge.js';
-  mount(document.getElementById('vb-badge'),
-        JSON.parse(document.getElementById('vb-provenance').textContent));
-</script>
-```
-
-재실행 절차는 **읽고 → 고치고 → 다시 렌더**다.
-
-1. `#vb-provenance`를 찾는다. 있으면 그 객체를 **읽어서 이어받는다** — 없으면 새로 만든다
-2. 바뀐 필드만 고친다. `findings`는 **추가**, `gaps`는 해소분 **삭제**, `grades`는 근거가 올라간 항목만 승급
-3. 객체를 다시 써넣고 `mount()`를 다시 부른다. `innerHTML` 통째 교체라 중복 배지가 생기지 않는다
+**파생값은 스크립트가 다시 센다** — `stats`(프롬프트 수·실투입·실작업일)와
+`period.effort`·`period.mode` 는 `timeline` 에서 계산되므로 JSON 에 적지 않아도 된다.
+적어도 덮어쓴다. 사람이 다시 세면 반드시 틀리기 때문이다.
 
 **절대 HTML을 손으로 고치지 마라.** 이 스킬을 처음 실전 적용했을 때 렌더러를 쓰지 않고 마크업을 직접 써서, 갱신할 때마다 문자열을 손으로 바꿨다. 그 결과 **탭 부제 숫자가 실제 행 수와 계속 어긋났다**(발견 13→23건으로 늘었는데 부제는 그대로). 파생값은 사람이 다시 세면 반드시 틀린다 — 객체만 고치고 파생은 렌더러에 맡긴다.
 
