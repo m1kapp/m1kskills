@@ -87,7 +87,7 @@ Outside Claude Code, or when no transcript is reachable, write **"미측정"**. 
 
 A prose list of "angles I explored" is still self-report; the author writes whatever sounds good. The same turns carry **timestamps**, and those are hard to fake without forging the transcript. Cluster them into work bursts and you get a trajectory that shows depth instead of claiming it.
 
-Split the slice wherever the gap between consecutive turns exceeds **30 minutes**. Each burst becomes one row: `{d, t, min, n, k, s}` — date, start time, duration, prompt count, what got carved, one line of detail.
+**Convert to the author's local timezone first.** Transcript timestamps are UTC (`...Z`); rendering them raw shifts every burst by the offset and can move work onto the wrong day. Verify against something local in the transcript — a pasted shell banner (`Last login: ... KST`) settles it. Then split the slice wherever the gap between consecutive turns exceeds **30 minutes**. Group bursts by date: `{d, wd, rows:[{t, min, n, k, s}]}` — the date and weekday become a header row (with that day's subtotal) and each burst row carries only the start time. Repeating the date on every row wastes the column and hides the day rhythm. Render durations as `N시간 M분` once they pass an hour; a bare `399분` is unreadable.
 
 ```python
 bursts = [[turns[0]]]
@@ -167,12 +167,18 @@ Made by {org} {author} · Powered by {AI tool}
 ```
 **The chip label is a readiness level, and it is DERIVED — never authored.** A chip that always reads "VERIFIED" carries no information: a report graded A throughout and one graded D throughout look identical, so the badge launders the weak one for any reader who does not open it. Compute the level from `grades` instead, and let the author's own honesty set it:
 
-| Level | Chip text | Condition |
-|---|---|---|
-| D | `스스로 더 검증하세요` | any key metric is D · **or** `sources` is empty · **or** no grades recorded |
-| C | `부분 검증 — 자릿수만` | worst grade is C |
-| B | `참고자료로 사용 가능` | worst grade is B |
-| A | `그대로 인용 가능` | every metric is A |
+| Level | Chip text | Icon | Condition |
+|---|---|---|---|
+| D | `VERIFY BEFORE USE` | magnifier | any key metric is D · **or** `sources` is empty · **or** no grades recorded |
+| C | `DIRECTIONAL ONLY` | compass | worst grade is C |
+| B | `REFERENCE ONLY` | book | worst grade is B |
+| A | `CITE AS-IS` | shield-check | every metric is A |
+
+Keep the labels **short and English** even in a Korean document — they sit in a monospace chip where a Korean phrase wraps, and terms like "자릿수만" need a legend to parse. The Korean explanation belongs on hover and in the widget.
+
+**Differentiate by icon, not colour.** A red or amber chip makes the whole document look alarming, which quietly punishes the author for grading honestly — exactly the incentive this skill must not create. Keep the chip neutral grey at every level and let the icon carry the meaning.
+
+**Put the level widget at the top of the dialog**, above the stat cards — it is the answer to "can I use this", so it should not be buried in a tab. Give it an `!` toggle that expands all four levels with their conditions and marks the current one, so a reader can see what the ceiling was and how far this report is from it.
 
 **Weakest link sets the level** — averaging hides the one number that will break someone's decision. And no primary sources means level D regardless of grades: without a check path the reader cannot dispute anything, so the grades are unfalsifiable.
 

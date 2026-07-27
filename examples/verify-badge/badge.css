@@ -12,16 +12,25 @@
 .vb-sign .dim{font-family:var(--vb-mono);font-size:10.5px;color:var(--vb-ink3)}
 .vb-chip{margin-top:8px;display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border:1px solid var(--vb-line);border-radius:4px;background:transparent;color:var(--vb-ink3);font-family:var(--vb-mono);font-size:9.5px;letter-spacing:.06em;cursor:pointer;transition:.15s}
 .vb-chip:hover{border-color:var(--vb-amber);color:var(--vb-amber)}
-/* 레벨은 등급 최저값에서 자동 산출 — 낮을수록 눈에 띄어야 세탁을 막는다 */
-.vb-chip.lv-d{border-color:var(--vb-bad);color:var(--vb-bad)}
-.vb-chip.lv-c{border-color:var(--vb-warn);color:var(--vb-warn)}
-.vb-chip.lv-a{border-color:var(--vb-good);color:var(--vb-good)}
-.vb-chip.lv-d:hover,.vb-chip.lv-c:hover,.vb-chip.lv-a:hover{opacity:.75}
-.vb-lvbox{display:flex;align-items:baseline;gap:9px;padding:9px 12px;border-radius:8px;margin:0 0 14px;background:var(--vb-surface);border-left:3px solid var(--vb-line)}
-.vb-lvbox b{font-size:13px;color:var(--vb-ink)} .vb-lvbox span{font-size:11.5px;color:var(--vb-ink3)}
-.vb-lvbox.lv-d{border-left-color:var(--vb-bad)} .vb-lvbox.lv-c{border-left-color:var(--vb-warn)}
-.vb-lvbox.lv-b{border-left-color:var(--vb-amber)} .vb-lvbox.lv-a{border-left-color:var(--vb-good)}
-.vb-chip span{font-weight:700;letter-spacing:.14em} .vb-chip em{font-style:normal;opacity:.75}
+/* 준비도 레벨 위젯 — 다이얼로그 최상단. 색으로 겁주지 않고 아이콘·문구로만 알린다 */
+.vb-lvbox{display:flex;align-items:center;gap:10px;padding:11px 13px;border:1px solid var(--vb-line);border-radius:9px;margin:0 0 10px;background:var(--vb-surface)}
+.vb-lvbox svg{width:18px;height:18px;flex:none;stroke:var(--vb-ink2);fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.vb-lvbox b{font-family:var(--vb-mono);font-size:12.5px;letter-spacing:.06em;color:var(--vb-ink);white-space:nowrap}
+.vb-lvbox span{flex:1;min-width:0;font-size:11.5px;color:var(--vb-ink3);line-height:1.5}
+.vb-lvi{flex:none;width:19px;height:19px;border-radius:50%;border:1px solid var(--vb-line);background:transparent;color:var(--vb-ink3);font-family:var(--vb-mono);font-size:11px;font-weight:800;line-height:1;cursor:pointer;transition:.15s}
+.vb-lvi:hover,.vb-lvi[aria-expanded="true"]{border-color:var(--vb-amber);color:var(--vb-amber)}
+.vb-lvall{margin:0 0 14px;padding:11px 13px;border:1px solid var(--vb-line);border-radius:9px;background:var(--vb-bg)}
+.vb-lvall>p{margin:0 0 9px;font-size:11.5px;color:var(--vb-ink3);line-height:1.6} .vb-lvall>p b{color:var(--vb-ink2)}
+.vb-lvall table{width:100%;border-collapse:collapse}
+.vb-lvall td{padding:6px;border-top:1px solid var(--vb-line);font-size:11.5px;color:var(--vb-ink3);vertical-align:middle;line-height:1.5}
+.vb-lvall tr:first-child td{border-top:none}
+.vb-lvall .ic{width:24px} .vb-lvall .ic svg{width:15px;height:15px;stroke:var(--vb-ink3);fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;display:block}
+.vb-lvall .nm{width:150px;font-family:var(--vb-mono);font-size:11px;letter-spacing:.04em;color:var(--vb-ink2);white-space:nowrap}
+.vb-lvall .cd{width:150px;opacity:.85}
+.vb-lvall tr.on td{color:var(--vb-ink2)} .vb-lvall tr.on .nm{color:var(--vb-amber);font-weight:700}
+.vb-lvall tr.on .ic svg{stroke:var(--vb-amber)}
+.vb-lvall tr.on .nm i{font-style:normal;font-size:9.5px;margin-left:5px;padding:1px 4px;border-radius:3px;background:var(--vb-amber-soft);color:var(--vb-amber);letter-spacing:0}
+.vb-chip span{font-weight:700;letter-spacing:.06em} .vb-chip em{font-style:normal;opacity:.75}
 .vb-chip svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 
 dialog.vb-dlg{border:1px solid var(--vb-line);border-radius:14px;padding:0;margin:auto;max-width:860px;width:calc(100% - 32px);background:var(--vb-bg);color:var(--vb-ink);font-family:var(--vb-sans)}
@@ -35,9 +44,9 @@ dialog.vb-dlg::backdrop{background:rgba(8,10,14,.55)}
 .vb-stats span{font-size:10.5px;color:var(--vb-ink3)}
 .vb-method{font-family:var(--vb-mono);font-size:11.5px;color:var(--vb-ink3);margin:10px 0 0}
 .vb-tabs{display:flex;gap:2px;margin:20px 0 0;border-bottom:1px solid var(--vb-line)}
-.vb-tabs button{flex:1;padding:10px 8px 11px;border:none;border-bottom:2px solid transparent;background:none;cursor:pointer;display:flex;align-items:baseline;justify-content:center;gap:6px;margin-bottom:-1px;font-family:var(--vb-sans)}
-.vb-tabs button b{font-size:13px;color:var(--vb-ink3);font-weight:700}
-.vb-tabs button small{font-family:var(--vb-mono);font-size:10px;color:var(--vb-ink3);opacity:.7}
+.vb-tabs button{flex:1;padding:9px 6px 10px;border:none;border-bottom:2px solid transparent;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;margin-bottom:-1px;font-family:var(--vb-sans)}
+.vb-tabs button b{font-size:13px;color:var(--vb-ink3);font-weight:700;white-space:nowrap}
+.vb-tabs button small{font-family:var(--vb-mono);font-size:9.5px;color:var(--vb-ink3);opacity:.7;white-space:nowrap;letter-spacing:-.01em}
 .vb-tabs button[aria-selected=true]{border-bottom-color:var(--vb-amber)}
 .vb-tabs button[aria-selected=true] b,.vb-tabs button[aria-selected=true] small{color:var(--vb-amber)}
 .vb-pane{height:340px;overflow-y:auto;padding:18px 2px 4px 0}
@@ -48,11 +57,16 @@ dialog.vb-dlg::backdrop{background:rgba(8,10,14,.55)}
 /* 파고든 궤적 — 막대 길이 = 그 구간에 머문 시간(실측) */
 .vb-tl{width:100%;border-collapse:collapse}
 .vb-tl td{padding:7px 8px;border-bottom:1px solid var(--vb-line);vertical-align:top;font-size:12.5px;color:var(--vb-ink2)}
-.vb-tl .when{width:52px;font-family:var(--vb-mono);font-size:10.5px;color:var(--vb-ink3);white-space:nowrap;line-height:1.35}
+.vb-tl .when{width:42px;font-family:var(--vb-mono);font-size:11px;color:var(--vb-ink2);font-weight:600;white-space:nowrap;padding-top:9px}
+.vb-tl .dayrow td{padding:13px 0 5px;border-bottom:1px solid var(--vb-line)}
+.vb-tl .dayrow:first-child td{padding-top:2px}
+.vb-tl .dayrow b{font-family:var(--vb-mono);font-size:12px;color:var(--vb-ink);letter-spacing:.02em}
+.vb-tl .dayrow span{font-size:11px;color:var(--vb-ink3);margin-left:3px}
+.vb-tl .dayrow em{float:right;font-style:normal;font-family:var(--vb-mono);font-size:10px;color:var(--vb-ink3);opacity:.8}
 .vb-tl .when span{color:var(--vb-ink2);font-weight:600}
 .vb-tl .bar{width:118px;padding-top:11px}
 .vb-tl .bar i{display:block;height:7px;border-radius:3px;background:var(--vb-amber);opacity:.82}
-.vb-tl .num{width:46px;font-family:var(--vb-mono);font-size:10.5px;color:var(--vb-ink3);white-space:nowrap;text-align:right;line-height:1.35}
+.vb-tl .num{width:62px;font-family:var(--vb-mono);font-size:10.5px;color:var(--vb-ink3);white-space:nowrap;text-align:right;line-height:1.35}
 .vb-tl .num span{color:var(--vb-ink2);font-weight:600}
 .vb-tl b{color:var(--vb-ink);font-size:12.5px}
 .vb-tl .sub{color:var(--vb-ink3);font-size:11.5px;line-height:1.5}
