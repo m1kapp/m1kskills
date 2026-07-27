@@ -15,7 +15,11 @@
     "audit",
     "provenance",
     "report",
-    "trust"
+    "trust",
+    "presentation",
+    "html",
+    "deck",
+    "typography"
   ],
   "displayName": "m1kskills"
 }

@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "dualdeck",
+  "displayName": "Dualdeck",
+  "version": "1.0.0",
+  "description": "리포트와 16:9 발표자료가 같은 HTML 한 장. 빌드·CDN·에셋 없이 file:// 로 열리고, 8개 팔레트가 의미색까지 함께 바꾼다. 잉크 우선 타이포그래피와 한글 줄바꿈 규칙 내장 — 읽는 문서와 띄우는 문서가 따로 놀지 않게 한다.",
+  "author": { "name": "m1kapp", "url": "https://m1k.app" },
+  "homepage": "https://github.com/m1kapp/m1kskills",
+  "license": "MIT",
+  "keywords": ["report", "presentation", "html", "deck", "theme", "typography", "korean"],
+  "skills": "./skills/"
+}
