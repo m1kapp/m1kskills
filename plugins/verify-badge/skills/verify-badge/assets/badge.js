@@ -58,27 +58,27 @@ export function mount(el, P) {
       <p class="vb-lead">${flat.length
         ? `트랜스크립트 타임스탬프에서 뽑은 작업 구간(KST). <b>막대 길이 = 그 구간에 머문 시간</b>이라, 어디서 오래 붙들렸는지가 그대로 보인다.`
         : `어떤 질문을 <b>순서대로</b> 파고들었나.`}</p>
-      ${flat.length ? `<table class="vb-tl">${tl.map(day=>`
+      ${flat.length ? `<table class="vb-tl"><thead><tr><th>시각</th><th>추이</th><th>소요 · 턴</th><th>무엇을 했나</th></tr></thead><tbody>${tl.map(day=>`
         <tr class="dayrow"><td colspan="4"><b>${esc(day.d)}</b><span>(${esc(day.wd)})</span><em>${day.rows.length}구간 · ${fmtMin(day.rows.reduce((a,r)=>a+r.min,0))} · ${day.rows.reduce((a,r)=>a+r.n,0)}건</em></td></tr>
         ${day.rows.map(x=>`<tr>
           <td class="when">${esc(x.t)}</td>
           <td class="bar"><i style="width:${Math.max(3, Math.round((x.min/maxMin)*100))}%"></i></td>
           <td class="num">${x.min?fmtMin(x.min):'—'}<br><span>${esc(x.n)}건</span></td>
-          <td><b>${esc(x.k)}</b><br><span class="sub">${esc(x.s)}</span></td></tr>`).join('')}`).join('')}</table>
+          <td><b>${esc(x.k)}</b><br><span class="sub">${esc(x.s)}</span></td></tr>`).join('')}`).join('')}</tbody></table>
       <p class="vb-sep">이 과정에서 <b>확정한 판단 ${P.angles.length}가지</b> — 구간 라벨과 겹치지 않는 것만</p>` : ''}
       <ol class="vb-list">${P.angles.map(x=>`<li><b>${esc(x[0])}</b> — ${esc(x[1])}</li>`).join('')}</ol>` },
     { id:'b', n:2, label:'얼마나 믿나', sub:`최저 ${lv.key} · ${P.grades.length}항목`, html:`
       <p class="vb-lead">항목마다 <b>근거의 단단함이 다르다.</b> 이 중 <b>최저 등급이 맨 위 레벨</b>을 결정한다 — 가장 약한 고리가 이 자료의 수준이라서.</p>
-      <table class="vb-tbl">${P.grades.map(x=>`<tr><td style="width:38%"><b class="${g(x.g)}">${esc(x.g)}</b> ${esc(x.k)}</td><td>${esc(x.why)}</td></tr>`).join('')}</table>` },
-    { id:'c', n:3, label:'뭘 틀렸나', sub:`${P.findings.length}건 · 치명 ${P.findings.filter(f=>f.sev==='치명').length}`, html:`
-      <p class="vb-lead">검증 라운드마다 <b>실제로 틀려서 수정한 것들.</b></p>
-      <table class="vb-tbl">${P.findings.map(f=>`<tr><td style="width:15%;white-space:nowrap">${esc(f.r)}<span class="vb-sev ${s(f.sev)}">${esc(f.sev)}</span></td><td>${esc(f.t)}${f.now?`<br><span class="vb-now">✓ ${esc(f.now)}</span>`:''}</td></tr>`).join('')}</table>` },
+      <table class="vb-tbl"><thead><tr><th style="width:38%">항목군 · 등급</th><th>왜 이 등급인가</th></tr></thead><tbody>${P.grades.map(x=>`<tr><td style="width:38%"><b class="${g(x.g)}">${esc(x.g)}</b> ${esc(x.k)}</td><td>${esc(x.why)}</td></tr>`).join('')}</tbody></table>` },
+    { id:'c', n:3, label:'뭘 바로잡았나', sub:`${P.findings.length}건 · 치명 ${P.findings.filter(f=>f.sev==='치명').length}`, html:`
+      <p class="vb-lead">작업 중간에 <b>스스로 뒤집은 판단</b>이다. 남은 오류가 아니라 이미 고친 것들이고, 치명은 <b>결정 자체가 바뀐 것</b>을 말한다.</p>
+      <table class="vb-tbl"><thead><tr><th style="width:15%">심각도</th><th>무엇을 뒤집었나 · 결과</th></tr></thead><tbody>${P.findings.map(f=>`<tr><td style="width:15%;white-space:nowrap">${esc(f.r)}<span class="vb-sev ${s(f.sev)}">${esc(f.sev)}</span></td><td>${esc(f.t)}${f.now?`<br><span class="vb-now">✓ ${esc(f.now)}</span>`:''}</td></tr>`).join('')}</tbody></table>` },
     { id:'d', n:4, label:'어디서 왔나', sub:`1차 출처 ${P.sources.length}`, html:`
       <p class="vb-lead">이 자료를 <b>믿지 말고 찍어보라.</b> 실제로 조회한 1차 출처다.<br><span style="color:var(--vb-ink3);font-size:11.5px">조사 방식 — ${esc(P.method)}</span></p>
-      <table class="vb-tbl">${P.sources.map(x=>`<tr><td style="width:42%"><a href="${safeUrl(x.u)}" target="_blank" rel="noopener noreferrer">${esc(x.t)} ↗</a></td><td>${esc(x.n)}</td></tr>`).join('')}</table>` },
+      <table class="vb-tbl"><thead><tr><th style="width:28%">출처</th><th>확인한 값</th><th style="width:26%">재현 경로</th></tr></thead><tbody>${P.sources.map(x=>`<tr><td>${x.u?`<a href="${safeUrl(x.u)}" target="_blank" rel="noopener noreferrer">${esc(x.t)} ↗</a>`:`<b>${esc(x.t)}</b>`}</td><td>${esc(x.n)}</td><td><code style="font-size:10px;word-break:break-all">${esc(x.r||(x.u?'공개 문서':'—'))}</code></td></tr>`).join('')}</tbody></table>` },
     { id:'e', n:5, label:'뭘 못했나', sub:`${P.gaps.length}건 미검증`, html:`
       <p class="vb-lead">여기까지가 <b>이 자료의 한계.</b> 다음 담당자가 이어서 하면 된다.</p>
-      <table class="vb-tbl">${P.gaps.map(x=>`<tr><td style="width:26%"><b>${esc(x.item)}</b><br><small>${esc(x.sub)}</small></td><td>${esc(x.why)}<br><b style="color:var(--vb-amber)">${esc(x.gain)}</b></td></tr>`).join('')}</table>
+      <table class="vb-tbl"><thead><tr><th style="width:26%">확인 못한 것</th><th>왜 남겨두면 위험한가 · 해소 비용</th></tr></thead><tbody>${P.gaps.map(x=>`<tr><td style="width:26%"><b>${esc(x.item)}</b><br><small>${esc(x.sub)}</small></td><td>${esc(x.why)}<br><b style="color:var(--vb-amber)">${esc(x.gain)}</b></td></tr>`).join('')}</tbody></table>
       <div class="vb-eq">👉 ${esc(P.closing)}</div>` },
   ];
 
@@ -108,10 +108,10 @@ export function mount(el, P) {
     <div class="vb-head"><h3>준비도 레벨 <span style="font-weight:400;color:var(--vb-ink3);font-size:13px">· 4단계와 판정 조건</span></h3><button data-lvclose aria-label="닫기">✕</button></div>
     <div class="vb-body">
       <p class="vb-lvnote">레벨은 <b>항목별 등급의 최저값</b>에서 자동으로 정해진다. 문구를 고쳐 올릴 수 없고, 근거를 올려야 올라간다.</p>
-      <table class="vb-lvall">${LV_ORDER.map(k=>{const L=LEVELS[k];return `<tr class="${k===lv.key?'on':''}">
+      <table class="vb-lvall"><thead><tr><th></th><th>등급</th><th>인용 범위</th><th>어떤 상태인가</th></tr></thead><tbody>${LV_ORDER.map(k=>{const L=LEVELS[k];return `<tr class="${k===lv.key?'on':''}">
         <td class="ic"><svg viewBox="0 0 24 24">${ICO[L.i]}</svg></td>
         <td class="nm">${esc(L.t)}${k===lv.key?'<i>현재</i>':''}</td>
-        <td class="cd">${esc(L.cond)}</td><td>${esc(L.w)}</td></tr>`;}).join('')}</table>
+        <td class="cd">${esc(L.cond)}</td><td>${esc(L.w)}</td></tr>`;}).join('')}</tbody></table>
     </div>
   </dialog>`;
 

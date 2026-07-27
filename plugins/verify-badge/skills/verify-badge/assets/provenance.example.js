@@ -63,9 +63,10 @@ export const PROVENANCE = {
 
   // 1차 출처 — "믿지 말고 찍어보라"
   sources: [
-    { t:'Solar Open 100B config.json', u:'https://huggingface.co/upstage/Solar-Open-100B/raw/main/config.json', n:'48층·KV8·hd128 → KV 0.188MB' },
-    { t:'AWS p6-b200 요금',            u:'https://instances.vantage.sh/aws/ec2/p6-b200.48xlarge',              n:'$113.93/hr ÷8 = $14.24' },
-    { t:'BFCL v4 리더보드',            u:'https://gorilla.cs.berkeley.edu/leaderboard.html',                    n:'툴콜링 점수 스케일 앵커' },
+    { t:'Solar Open 100B config.json', u:'https://huggingface.co/upstage/Solar-Open-100B/raw/main/config.json', n:'48층·KV8·hd128 → KV 0.188MB', r:'공개 문서' },
+    { t:'AWS p6-b200 요금',            u:'https://instances.vantage.sh/aws/ec2/p6-b200.48xlarge',              n:'$113.93/hr ÷8 = $14.24', r:'공개 문서' },
+    { t:'BFCL v4 리더보드',            u:'https://gorilla.cs.berkeley.edu/leaderboard.html',                    n:'툴콜링 점수 스케일 앵커', r:'공개 문서' },
+    { t:'ES 인덱스별 primary 바이트', u:null, n:'comment_hybrid 1,510 GiB', r:'GET .monitoring-es-*/_search {type:index_stats}' }
   ],
 
   // 아직 못 한 것 — 다음 담당자용

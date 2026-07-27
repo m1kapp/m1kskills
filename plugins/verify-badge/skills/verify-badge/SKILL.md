@@ -125,7 +125,7 @@ const PROVENANCE = {
   timeline:[{d,t,min,n,k,s}],          // work bursts from timestamps — the trust anchor
   angles:[[title,detail]],               // prose fallback when no timestamps
   findings:[{r,sev,t,now}],              // now = current value in the artifact
-  sources:[{t,u,n}],                     // primary source: title, URL, value confirmed
+  sources:[{t,u,n,r}],                   // 출처·URL(연 것만)·확인한 값·재현 명령(내부 측정)
   gaps:[{item,sub,why,gain}], closing
 };
 renderProvenance(PROVENANCE);
@@ -134,6 +134,22 @@ renderProvenance(PROVENANCE);
 **Escape on the way out.** You fill this object from harvested session data — search-result titles, source URLs, values copied off pages. That is external text on a normal path, so the renderer must HTML-escape every field and allowlist `href` schemes (`https?:`/`mailto:`/relative only). A badge that ships an injection hole is not a trust artifact.
 
 Match the format to the medium: HTML report → `<dialog>` + tabs; markdown → `<details>` sections; slides → text block.
+
+---
+
+### Step 6 — Close what you can, then re-derive
+
+배지를 붙인 직후 `gaps`를 훑어 **30분 안에 닫을 수 있는 것을 즉시 시도한다.** 적어두고 끝내면 gap 목록은 변명이 되고, 닫으면 작업 지시서가 된다. 실제로 닫아보면 **원래 배지보다 값진 것이 나온다** — 명제 하나가 죽거나, 근거 없는 값이 드러나거나, 막힌 줄 알았던 문이 열린다.
+
+닫을 때마다 다음을 **전부 다시 계산한다**. 배지는 스냅샷이 아니라 살아있는 문서다.
+
+- `grades` — 근거가 올라갔으면 등급도 올린다 (실측이 붙으면 B → A)
+- `findings` — 닫는 과정에서 뒤집힌 판단을 추가한다. 이게 배지의 핵심 자산이다
+- `gaps` — 해소된 항목은 **삭선이 아니라 삭제**한다. 지워진 항목은 읽는 사람에게 노이즈다
+- 레벨 — `grades` 최저값에서 다시 파생
+- **탭 부제 숫자** — 실제 행 수를 다시 센다
+
+남는 gap은 대개 세 종류다: **권한**, **실행 시간**, **사람에게 물어야 하는 것**. 이 셋만 남았으면 멈춰도 된다.
 
 ---
 
@@ -159,6 +175,13 @@ First build with every spec applied. Copy structure, wording, and color from her
 Look at: amber signature color, 5-tab layout, the sources tab, findings↔current-value linkage, footer signature + mini chip, three-tier usage scope in the body.
 
 ## Anti-patterns
+
+- **탭 부제 숫자가 실제 행 수와 다름** — 칩 숫자 규칙의 확장이다. 갱신할 때마다 다시 센다
+- **앰버로 넓은 면을 칠함** — 헤더 바·표 배경. 템플릿처럼 보이고 호스트와 겉돈다
+- **호스트 문서의 팔레트를 무시함** — `prefers-color-scheme`를 그대로 두면 라이트 고정 문서에서 배지만 뒤집힌다
+- **gap을 적어놓고 닫으려 시도조차 안 함** — 30분 안에 되는 것이 남아 있으면 배지가 아니라 알리바이다
+- **URL을 열지 않고 출처에 적음** — 링크를 붙이는 행위가 검증 단계다. 열어본 것만 `u`를 채운다
+- **표에 `<thead>`가 없음** — 열이 3개만 넘어도 무엇을 보는지 알 수 없다
 
 - Stamping "5차 검증" when it wasn't done
 - Grading everything A
