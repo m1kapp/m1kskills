@@ -54,7 +54,7 @@ export function mount(el, P) {
   const lv = levelOf(P);
 
   const tabs = [
-    { id:'a', label:'파고든 궤적', sub:flat.length?`${flat.length}구간 · ${fmtMin(totalMin)}`:`${P.angles.length}단계`, html:`
+    { id:'a', n:1, label:'어떻게 팠나', sub:flat.length?`${flat.length}구간`:`${P.angles.length}단계`, html:`
       <p class="vb-lead">${flat.length
         ? `트랜스크립트 타임스탬프에서 뽑은 작업 구간(KST). <b>막대 길이 = 그 구간에 머문 시간</b>이라, 어디서 오래 붙들렸는지가 그대로 보인다.`
         : `어떤 질문을 <b>순서대로</b> 파고들었나.`}</p>
@@ -64,18 +64,19 @@ export function mount(el, P) {
           <td class="when">${esc(x.t)}</td>
           <td class="bar"><i style="width:${Math.max(3, Math.round((x.min/maxMin)*100))}%"></i></td>
           <td class="num">${x.min?fmtMin(x.min):'—'}<br><span>${esc(x.n)}건</span></td>
-          <td><b>${esc(x.k)}</b><br><span class="sub">${esc(x.s)}</span></td></tr>`).join('')}`).join('')}</table>`
-        : `<ol class="vb-list">${P.angles.map(x=>`<li><b>${esc(x[0])}</b> — ${esc(x[1])}</li>`).join('')}</ol>`}` },
-    { id:'b', label:'어디까지 확인', sub:'근거 수준', html:`
+          <td><b>${esc(x.k)}</b><br><span class="sub">${esc(x.s)}</span></td></tr>`).join('')}`).join('')}</table>
+      <p class="vb-sep">이 과정에서 <b>확정한 판단 ${P.angles.length}가지</b> — 구간 라벨과 겹치지 않는 것만</p>` : ''}
+      <ol class="vb-list">${P.angles.map(x=>`<li><b>${esc(x[0])}</b> — ${esc(x[1])}</li>`).join('')}</ol>` },
+    { id:'b', n:2, label:'얼마나 믿나', sub:`최저 ${lv.key} · ${P.grades.length}항목`, html:`
       <p class="vb-lead">항목마다 <b>근거의 단단함이 다르다.</b> 이 중 <b>최저 등급이 맨 위 레벨</b>을 결정한다 — 가장 약한 고리가 이 자료의 수준이라서.</p>
       <table class="vb-tbl">${P.grades.map(x=>`<tr><td style="width:38%"><b class="${g(x.g)}">${esc(x.g)}</b> ${esc(x.k)}</td><td>${esc(x.why)}</td></tr>`).join('')}</table>` },
-    { id:'c', label:'고친 것', sub:`${P.findings.length}건`, html:`
+    { id:'c', n:3, label:'뭘 틀렸나', sub:`${P.findings.length}건 · 치명 ${P.findings.filter(f=>f.sev==='치명').length}`, html:`
       <p class="vb-lead">검증 라운드마다 <b>실제로 틀려서 수정한 것들.</b></p>
       <table class="vb-tbl">${P.findings.map(f=>`<tr><td style="width:15%;white-space:nowrap">${esc(f.r)}<span class="vb-sev ${s(f.sev)}">${esc(f.sev)}</span></td><td>${esc(f.t)}${f.now?`<br><span class="vb-now">✓ ${esc(f.now)}</span>`:''}</td></tr>`).join('')}</table>` },
-    { id:'d', label:'직접 확인', sub:`${P.sources.length}건`, html:`
-      <p class="vb-lead">이 자료를 <b>믿지 말고 찍어보라.</b> 실제로 조회한 1차 출처다.</p>
+    { id:'d', n:4, label:'어디서 왔나', sub:`1차 출처 ${P.sources.length}`, html:`
+      <p class="vb-lead">이 자료를 <b>믿지 말고 찍어보라.</b> 실제로 조회한 1차 출처다.<br><span style="color:var(--vb-ink3);font-size:11.5px">조사 방식 — ${esc(P.method)}</span></p>
       <table class="vb-tbl">${P.sources.map(x=>`<tr><td style="width:42%"><a href="${safeUrl(x.u)}" target="_blank" rel="noopener noreferrer">${esc(x.t)} ↗</a></td><td>${esc(x.n)}</td></tr>`).join('')}</table>` },
-    { id:'e', label:'못 한 것', sub:`${P.gaps.length}건`, html:`
+    { id:'e', n:5, label:'뭘 못했나', sub:`${P.gaps.length}건 미검증`, html:`
       <p class="vb-lead">여기까지가 <b>이 자료의 한계.</b> 다음 담당자가 이어서 하면 된다.</p>
       <table class="vb-tbl">${P.gaps.map(x=>`<tr><td style="width:26%"><b>${esc(x.item)}</b><br><small>${esc(x.sub)}</small></td><td>${esc(x.why)}<br><b style="color:var(--vb-amber)">${esc(x.gain)}</b></td></tr>`).join('')}</table>
       <div class="vb-eq">👉 ${esc(P.closing)}</div>` },
@@ -96,19 +97,21 @@ export function mount(el, P) {
     <div class="vb-body">
       <div class="vb-lvbox">
         <svg viewBox="0 0 24 24">${ICO[lv.i]}</svg><b>${esc(lv.t)}</b><span>${esc(lv.w)}</span>
-        <button class="vb-lvi" data-lvi aria-expanded="false" title="다른 레벨은 뭐가 있나">!</button>
+        <button class="vb-lvi" data-lvi title="다른 레벨은 뭐가 있나">!</button>
       </div>
-      <div class="vb-lvall" data-lvall hidden>
-        <p>레벨은 <b>항목별 등급의 최저값</b>에서 자동으로 정해진다. 문구를 고쳐 올릴 수 없고, 근거를 올려야 올라간다.</p>
-        <table>${LV_ORDER.map(k=>{const L=LEVELS[k];return `<tr class="${k===lv.key?'on':''}">
-          <td class="ic"><svg viewBox="0 0 24 24">${ICO[L.i]}</svg></td>
-          <td class="nm">${esc(L.t)}${k===lv.key?'<i>현재</i>':''}</td>
-          <td class="cd">${esc(L.cond)}</td><td>${esc(L.w)}</td></tr>`;}).join('')}</table>
-      </div>
-      <div class="vb-stats">${P.stats.map(x=>`<div><b>${esc(x.v)}</b><span>${esc(x.l)}</span></div>`).join('')}</div>
-      <p class="vb-method">${esc(P.asOf)} · ${esc(P.tool)} · ${esc(P.method)}</p>
-      <div class="vb-tabs" role="tablist">${tabs.map((t,i)=>`<button role="tab" id="${dlgId}-t-${t.id}" aria-controls="${dlgId}-p-${t.id}" aria-selected="${i===0}" tabindex="${i?-1:0}" data-t="${t.id}"><b>${esc(t.label)}</b><small>${esc(t.sub)}</small></button>`).join('')}</div>
+      <p class="vb-meta">${P.stats.map(x=>`<b>${esc(x.v)}</b> ${esc(String(x.l).replace(/\(.*\)/,'').trim())}`).join(' <i>·</i> ')} <i>·</i> <s>${esc(P.asOf)} 기준</s> <i>·</i> <s>${esc(P.tool)}</s></p>
+      <div class="vb-tabs" role="tablist">${tabs.map((t,i)=>`<button role="tab" id="${dlgId}-t-${t.id}" aria-controls="${dlgId}-p-${t.id}" aria-selected="${i===0}" tabindex="${i?-1:0}" data-t="${t.id}"><u>${t.n}</u><b>${esc(t.label)}</b><small>${esc(t.sub)}</small></button>`).join('')}</div>
       ${tabs.map((t,i)=>`<div class="vb-pane" role="tabpanel" id="${dlgId}-p-${t.id}" aria-labelledby="${dlgId}-t-${t.id}" tabindex="0" data-p="${t.id}" ${i?'hidden':''}>${t.html}</div>`).join('')}
+    </div>
+  </dialog>
+  <dialog class="vb-dlg vb-dlg-lv" id="${dlgId}-lv" aria-label="준비도 레벨">
+    <div class="vb-head"><h3>준비도 레벨 <span style="font-weight:400;color:var(--vb-ink3);font-size:13px">· 4단계와 판정 조건</span></h3><button data-lvclose aria-label="닫기">✕</button></div>
+    <div class="vb-body">
+      <p class="vb-lvnote">레벨은 <b>항목별 등급의 최저값</b>에서 자동으로 정해진다. 문구를 고쳐 올릴 수 없고, 근거를 올려야 올라간다.</p>
+      <table class="vb-lvall">${LV_ORDER.map(k=>{const L=LEVELS[k];return `<tr class="${k===lv.key?'on':''}">
+        <td class="ic"><svg viewBox="0 0 24 24">${ICO[L.i]}</svg></td>
+        <td class="nm">${esc(L.t)}${k===lv.key?'<i>현재</i>':''}</td>
+        <td class="cd">${esc(L.cond)}</td><td>${esc(L.w)}</td></tr>`;}).join('')}</table>
     </div>
   </dialog>`;
 
@@ -117,8 +120,13 @@ export function mount(el, P) {
   el.querySelector('[data-close]').onclick = () => dlg.close();
   dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
 
-  const lvi = el.querySelector('[data-lvi]'), lva = el.querySelector('[data-lvall]');
-  if (lvi) lvi.onclick = () => { const open = lva.hidden; lva.hidden = !open; lvi.setAttribute('aria-expanded', String(open)); };
+  // 레벨 4단계는 중첩 다이얼로그로 — 인라인 펼침은 아래를 밀어내 다이얼로그가 튄다
+  const lvi = el.querySelector('[data-lvi]'), lvd = el.querySelector('.vb-dlg-lv');
+  if (lvi) lvi.onclick = () => lvd.showModal();
+  if (lvd) {
+    lvd.querySelector('[data-lvclose]').onclick = () => lvd.close();
+    lvd.addEventListener('click', e => { if (e.target === lvd) lvd.close(); });
+  }
 
   const btns = [...el.querySelectorAll('.vb-tabs button')];
   const select = b => {

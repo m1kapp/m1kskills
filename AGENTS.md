@@ -127,7 +127,11 @@ What makes this convincing is the shape, so don't sand it down:
 - **Single-prompt ticks** prove the work was revisited over days rather than crammed. Keep them; they read as diligence, not noise
 - **Abandoned directions belong in the label.** "기업 케이스 매칭 시도 → 근거 부족으로 폐기" is the single most credible line a badge can carry, because nobody invents a dead end they took
 
-Fall back to the prose `angles` list only when no timestamps are available.
+**Keep the prose list only for what the timeline cannot say.** A burst label already states what changed in that stretch, so an "angles I explored" entry covering the same ground is duplication — and calling it "질문 N가지" when N does not match the burst count is simply false. Cut every prose item a burst label already covers; keep only **conclusions with numbers attached** ("SXM NVLink 900GB/s 실효율 75~85% vs PCIe 64GB/s 20~30%", "손익분기 AWS 6개월·Elice 14.5개월"). Title it accordingly — 확정한 판단, not 파고든 질문.
+
+The division of labour: **timeline = when and what you did (log, hard to fake); prose list = what you concluded (content).** If an item does not clearly belong to one of those, it belongs in the report body, not the badge.
+
+Fall back to the prose list entirely only when no timestamps are available.
 
 ### Step 2 — Ask the user (only these three)
 
@@ -202,7 +206,7 @@ Keep the labels **short and English** even in a Korean document — they sit in 
 
 **Differentiate by icon, not colour.** A red or amber chip makes the whole document look alarming, which quietly punishes the author for grading honestly — exactly the incentive this skill must not create. Keep the chip neutral grey at every level and let the icon carry the meaning.
 
-**Put the level widget at the top of the dialog**, above the stat cards — it is the answer to "can I use this", so it should not be buried in a tab. Give it an `!` toggle that expands all four levels with their conditions and marks the current one, so a reader can see what the ceiling was and how far this report is from it.
+**Put the level widget at the top of the dialog**, above the stat cards — it is the answer to "can I use this", so it should not be buried in a tab. Give it an `!` button that opens the four levels **in a nested dialog**, not an inline expander — the panel pushes everything below it and makes the dialog jump, the exact instability the fixed tab height was introduced to avoid. Keep that table on one line per row (`white-space: nowrap`, generous dialog width); a wrapped condition column reads as noise. Mark the current level so the reader sees both the ceiling and the distance to it.
 
 **Weakest link sets the level** — averaging hides the one number that will break someone's decision. And no primary sources means level D regardless of grades: without a check path the reader cannot dispute anything, so the grades are unfalsifiable.
 
@@ -214,20 +218,32 @@ If the author asks to raise the level, the answer is to raise the evidence — a
 
 Chip must be **neutral outline, monospace, tight padding** (3/9px). Loud chips cheapen the document. Amber only on hover.
 
-**(B) Detail dialog** — fixed header + tabs
+**(B) Detail dialog** — compact header, then tabs
+
 ```
-[4 stat cards]  iterations · review rounds · hours · period
-[source line]   as-of date · tool · what was directly consulted
-──────────────────────────────────────────────────────────
-│ 파고든 관점 │ 어디까지 확인 │ 고친 것 │ 직접 확인 │ 못 한 것 │  ← underline tabs
+[ ⌖ DIRECTIONAL ONLY   가정이 결과를 좌우 — 방향·자릿수 감만        [!] ]
+105 프롬프트 · 6차 교차검증 · 6시간 39분 실투입 · 3일 실작업 · 2026-07-26 기준 · Claude Opus 5
+──────────────────────────────────────────────────────────────────
+ ①            ②            ③            ④            ⑤
+어떻게 팠나   얼마나 믿나   뭘 틀렸나    어디서 왔나   뭘 못했나
+ 12구간      최저 C·4항목  6건·치명 3   1차 출처 8   3건 미검증
 ```
+
 Author info lives **only in the footer signature (A)**. Repeating it inside the dialog is redundant and visually heavy.
 
-- **Tab 1 · 파고든 궤적** — the timestamp-derived burst timeline (see Step 1). **Put it first** — trust comes from the trajectory of thinking, and this is the only tab whose data the author did not author. Bars sized by duration; label each with what changed and name the dead ends.
-- **Tab 2 · 어디까지 확인** — per-item A/B/C/D + the reason
-- **Tab 3 · 고친 것** — by round + severity (치명/중대/경미) + **current value** ("✓ 현재 H100=495 · GPU 표에서 확인"). History must connect to the artifact to be checkable. If none: "발견 0건 — 그만큼 검증 깊이가 얕았을 수 있음"
-- **Tab 4 · 직접 확인** ★ — **primary source links**. Lead line: `"이 자료를 믿지 말고 찍어보라."` Each row = [source link ↗] + [value confirmed there]. Include how to re-derive any formulas.
-- **Tab 5 · 못 한 것** — unverified item / why not / what you'd gain (grade promotion)
+**Header: one widget, one line.** The readiness widget answers "can I use this"; a single measured line answers "how hard was this worked". Resist stat *cards* — four boxes eat vertical space and end up repeating what the tab subtitles already say. Any figure that appears both in the header and in a tab subtitle must be cut from one of them.
+
+**Name tabs after the reader's questions, not your artifacts.** "어디까지 확인" and "직접 확인" both contain 확인 and cannot be told apart; "고친 것" does not say what was fixed. Five parallel questions in the same grammatical form read as one set and need no legend:
+
+| # | Tab | Subtitle carries |
+|---|---|---|
+| ① | 어떻게 팠나 | burst count |
+| ② | 얼마나 믿나 | **worst grade** + item count |
+| ③ | 뭘 틀렸나 | findings + how many 치명 |
+| ④ | 어디서 왔나 | primary-source count |
+| ⑤ | 뭘 못했나 | unverified count |
+
+**Subtitles must carry information, not labels.** "근거 수준" tells the reader nothing — "최저 C · 4항목" tells them the verdict before they click. Number the tabs (①–⑤); it signals these are read in order, and the numbered badge gives the active tab a second visual anchor besides the underline.
 
 Each tab gets a **one-line lead sentence** so the reader knows what they're looking at.
 
@@ -302,5 +318,9 @@ Look at: amber signature color, 5-tab layout, the sources tab, findings↔curren
 - Interpolating harvested strings into HTML without escaping — the badge becomes the injection vector
 - **A chip that reads the same no matter how weak the report is** — it launders bad work past anyone who doesn't open it
 - Hand-writing the readiness level instead of deriving it from the worst grade
+- Tab names that repeat a word (확인/확인) or describe your artifacts instead of the reader's question
+- Subtitles that are labels ("근거 수준") where a value would fit ("최저 C · 4항목")
+- The same figure printed in both the header and a tab subtitle
+- A prose "angles" list that restates the burst labels
 - **Estimating a countable stat** — guessing prompt volume or work days when the transcript is right there
 - Counting a whole session as one deliverable, so unrelated work inflates the number
