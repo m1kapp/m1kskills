@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "verify-badge",
   "displayName": "Verify Badge",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "리포트·분석 자료에 검증 이력 뱃지를 붙인다. 도장이 아니라 감사(audit) — 실제 검증한 것만 기록하고, AI가 냉정하게 신뢰 등급(A/B/C/D)을 매기고 '여기는 더 파야 한다'와 1차 출처 링크를 남긴다. AI로 만든 자료의 '이거 진짜야?' 를 앞단에서 처리.",
   "author": {
     "name": "m1kapp",

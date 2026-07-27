@@ -120,6 +120,15 @@ python3 "${CLAUDE_SKILL_DIR}/scripts/attach.py" <문서.html> <provenance.json>
 | `assets/badge.js` · `badge.css` | 파일을 나눠 둘 수 있는 문서용 (`mount(el, P)`) |
 | `assets/provenance.example.js` | 채워진 객체 — 모양을 여기서 베낀다 |
 
+`attach.py` 는 붙이기 **전에** `author`(name·org)·`grades`·`sources` 를 검사한다. 없으면
+배지가 브라우저에서 조용히 죽는데 CLI 는 성공으로 보이기 때문이다. `grades`·`sources`
+가 비면 레벨이 최하로 고정된다는 경고도 함께 낸다.
+
+**`badge.inline.html` 은 생성물이다.** `badge.js`·`badge.css` 를 고쳤으면 반드시
+`python3 scripts/build-inline.py` 로 재생성한다. `--check` 는 어긋났을 때 실패한다 —
+안 돌리면 단일 파일 산출물만 옛 렌더러를 쓰게 되고, 이 스킬이 없애려던 그 드리프트가
+스킬 안에서 재발한다.
+
 `attach.py` 는 **멱등**하다. `#vb-provenance` 가 있으면 JSON 만 갈아끼우고, 없으면
 인라인 블록을 `</body>` 앞에 넣는다. 같은 입력으로 몇 번을 돌려도 파일이 동일하다.
 
