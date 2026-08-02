@@ -83,6 +83,7 @@ npx github:m1kapp/logodown -f char:M -b down -c '#09090b' -o public
     --fs, --bs <n>   앞/뒤 슬롯 크기 0.5~2 (기본은 자동 정규화라 보통 불필요)
     --shadow <0-3>   그림자
 -o, --out <dir>      출력 폴더 (기본 ./logodown-out)
+-z, --zip            낱개 파일 대신 <out>/logodown.zip 하나로 묶기
     --svg-only       SVG 만
     --name/--slogan  manifest·OG 텍스트
     --url <url>      웹앱 링크를 그대로 붙여넣기
@@ -105,10 +106,29 @@ for v in "flame char:C #FF0000" "zap char:C #7c3aed" "bars char:C #09090b"; do .
 만든 뒤 `icon-512.png` 들을 사용자에게 이미지로 보여준다(파일 전송). 텍스트로 설명만
 하지 말 것 — 로고는 봐야 판단이 된다.
 
-## 4. 프로젝트에 붙인다
+## 4. 결과를 전달한다
 
+**둘 중 하나.** 사용자 요청 문구로 판단한다 — "붙여줘/적용해줘" 는 A, "다운로드/
+zip/보내줘/받고 싶어" 는 B. 애매하면 A 가 기본값이다(로고는 대체로 지금 작업 중인
+프로젝트에 쓰려는 것이므로).
+
+**A. 지금 프로젝트에 바로 적용**
 `-o public` 으로 뽑았으면 `head.html` 내용을 `index.html` 의 `<head>` 에 붙이면 끝.
 Next.js 면 `app/` 에 `icon.svg` `apple-icon.png` 로 두면 자동 인식된다.
+
+**B. 다운로드용 zip 하나로 전달**
+프로젝트에 심지 않고 사용자가 직접 받아 가야 하는 경우(다른 곳에 쓸 로고,
+원격/샌드박스 환경이라 로컬에 파일이 안 남는 경우 등) `--zip` 을 붙여 `logodown.zip`
+하나로 묶는다.
+
+```bash
+npx github:m1kapp/logodown -f flame -b char:C -c '#FE2C55' -g --zip -o /tmp/out
+```
+
+이 zip 파일을 그대로 사용자에게 전달한다. 실행 환경에 파일 전송 도구가 있으면
+그걸 쓰고, 없으면 최소한 zip 이 만들어진 경로를 정확히 알려준다 — "다운로드할 수
+있게 해달라"는 요청은 파일 경로만 던지고 끝내는 게 아니라 실제로 손에 쥘 수 있는
+형태(zip 하나)로 만들어 주는 것까지가 할 일이다.
 
 ## 판단 기준
 
