@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "logodown",
+  "displayName": "Logodown",
+  "version": "0.1.0",
+  "description": "앱 아이콘·파비콘·로고를 프로젝트 성격에 맞춰 직접 골라서 만든다. 이름과 README 를 읽고 심볼 148개 + 문자 중에서 슬롯 두 칸을 정하고, 색·스타일까지 결정해 후보를 여러 개 보여준다. 고르면 icon.svg·favicon.ico·apple-touch-icon·PWA 아이콘·manifest.json·head.html 한 벌이 나온다.",
+  "author": {
+    "name": "m1kapp",
+    "url": "https://m1k.app"
+  },
+  "homepage": "https://logodown.m1k.app",
+  "license": "MIT",
+  "keywords": [
+    "logo",
+    "favicon",
+    "icon",
+    "pwa",
+    "branding",
+    "svg"
+  ],
+  "skills": "./skills/"
+}

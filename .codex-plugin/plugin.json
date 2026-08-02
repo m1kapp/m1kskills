@@ -19,14 +19,19 @@
     "presentation",
     "html",
     "deck",
-    "typography"
+    "typography",
+    "logo",
+    "favicon",
+    "icon",
+    "pwa",
+    "branding"
   ],
   "skills": "./skills/",
   "hooks": {},
   "interface": {
     "displayName": "m1kskills",
     "shortDescription": "AI 쓰다 유용했던 나만의 스킬 모음",
-    "longDescription": "verify-badge: 리포트를 마무리할 때 실명 책임, 실제 검증 이력, 항목별 신뢰 등급(A/B/C/D), 1차 출처 링크, 아직 못 한 것까지 남기는 뱃지를 생성합니다. 도장이 아니라 감사(audit)입니다. dualdeck: 리포트와 16:9 발표자료가 같은 HTML 한 장이 되게 하는 셸 — 8개 팔레트가 의미색까지 함께 바뀌고, 잉크 우선 타이포그래피와 한글 줄바꿈 규칙이 들어 있습니다.",
+    "longDescription": "verify-badge: 리포트를 마무리할 때 실명 책임, 실제 검증 이력, 항목별 신뢰 등급(A/B/C/D), 1차 출처 링크, 아직 못 한 것까지 남기는 뱃지를 생성합니다. 도장이 아니라 감사(audit)입니다. dualdeck: 리포트와 16:9 발표자료가 같은 HTML 한 장이 되게 하는 셸 — 8개 팔레트가 의미색까지 함께 바뀌고, 잉크 우선 타이포그래피와 한글 줄바꿈 규칙이 들어 있습니다. logodown: 프로젝트 이름과 성격을 읽고 심볼·문자·색·스타일을 직접 골라 앱 아이콘과 파비콘 한 벌(SVG·ICO·PWA·manifest·head 스니펫)을 만듭니다.",
     "developerName": "m1kapp",
     "category": "Developer Tools",
     "capabilities": [
@@ -36,7 +41,8 @@
     ],
     "defaultPrompt": [
       "이 리포트에 검증 이력 뱃지 붙여줘.",
-      "이 내용 리포트랑 발표자료 겸용 HTML로 만들어줘."
+      "이 내용 리포트랑 발표자료 겸용 HTML로 만들어줘.",
+      "이 프로젝트에 어울리는 로고랑 파비콘 만들어줘."
     ],
     "websiteURL": "https://github.com/m1kapp/m1kskills",
     "brandColor": "#a8761a"

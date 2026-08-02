@@ -7,11 +7,13 @@
 |---|---|---|
 | **verify-badge** | 자료에 **검증 이력 뱃지** — 실명 책임·신뢰 등급·1차 출처·못 한 것 | "뱃지 붙여줘" |
 | **dualdeck** | **리포트와 발표자료가 같은 HTML 한 장** — 8팔레트·PDF·한글 타이포 내장 | "리포트 써줘" |
+| **logodown** | **앱 아이콘·파비콘 한 벌** — 심볼 148개에서 직접 골라 후보 제시, SVG·ICO·PWA·manifest | "로고 만들어줘" |
 
 ```
 /plugin marketplace add m1kapp/m1kskills
 /plugin install verify-badge@m1kskills
 /plugin install dualdeck@m1kskills
+/plugin install logodown@m1kskills
 ```
 
 > 설치 후 `/reload-plugins` 한 번.
@@ -81,6 +83,25 @@ AI로 만든 자료의 첫 반응은 늘 **"이거 진짜야?"** 입니다. 이 
 
 👉 [셸 파일 하나](examples/dualdeck/) — 복사해서 내용만 채우면 됩니다.
 👉 [섹션 순서 레시피](examples/dualdeck/PATTERNS.md) — 비교 리포트 · 기술 설명 자료 · 측정 보고 3종
+
+### `logodown` — 앱 아이콘·파비콘 (고르는 것까지 대신)
+
+프로젝트 이름과 README를 읽고 **심볼 148개 + 문자(영문·숫자·한글)** 중에서 슬롯 두 칸을 정합니다.
+`M + ↓` 가 마크다운 마크인 것처럼, 이니셜 하나와 뜻을 담은 심볼 하나를 붙이는 문법입니다.
+색과 스타일까지 정해서 **후보를 여러 개 만들어 보여주고**, 고르면 에셋 한 벌이 나옵니다.
+
+```
+/logodown
+```
+
+나오는 것 — `icon.svg` · `favicon.ico`(16·32·48) · `apple-touch-icon.png` ·
+`icon-192/512.png` · `icon-maskable-512.png` · `manifest.json` · `head.html`
+
+- **크기·정렬은 자동.** 심볼마다 다른 그리드 여백을 실측한 잉크 bbox 로 정규화해서, 글자 옆에 놓아도 위아래 끝이 맞습니다.
+- **작은 크기 기준으로 고릅니다.** 파비콘은 16px 입니다 — 선이 얇거나 요소가 많으면 뭉갭니다.
+- 웹 UI 로 직접 만지고 싶으면 [logodown.m1k.app](https://logodown.m1k.app). URL 파라미터로 상태를 그대로 주고받습니다.
+
+👉 엔진과 CLI 는 [m1kapp/logodown](https://github.com/m1kapp/logodown) — 플러그인 없이 `npx github:m1kapp/logodown` 으로도 씁니다.
 
 ---
 

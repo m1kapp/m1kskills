@@ -19,7 +19,12 @@
     "presentation",
     "html",
     "deck",
-    "typography"
+    "typography",
+    "logo",
+    "favicon",
+    "icon",
+    "pwa",
+    "branding"
   ],
   "displayName": "m1kskills"
 }
