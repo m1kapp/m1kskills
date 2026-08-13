@@ -1,0 +1,4 @@
+interface:
+  display_name: "Work Coordinates"
+  short_description: "작업의 목표·현재·다음·검증과 디버깅 근거를 유지"
+  default_prompt: "Use $work-coordinates to report the current goal, evidence, next action, and exact verification."

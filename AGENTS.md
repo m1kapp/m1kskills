@@ -7,6 +7,7 @@
 | **Verify Badge** | 자료에 검증 이력 뱃지 — 실명 책임 + 실제 검증 이력 + 냉정한 한계 진단 | [`skills/verify-badge/SKILL.md`](skills/verify-badge/SKILL.md) |
 | **Dualdeck** | 리포트와 16:9 발표자료가 같은 HTML 한 장 — 팔레트 엔진 · 잉크 우선 타이포 · 한글 규칙 | [`skills/dualdeck/SKILL.md`](skills/dualdeck/SKILL.md) |
 | **Logodown** | 앱 아이콘·파비콘 — 심볼 148개에서 직접 골라 후보 제시, SVG·ICO·PWA 에셋 한 벌 | [`skills/logodown/SKILL.md`](skills/logodown/SKILL.md) |
+| **Work Coordinates** | 북극성·현재·다음·검증을 유지하고 디버깅 변경의 성격을 구분 | [`skills/work-coordinates/SKILL.md`](skills/work-coordinates/SKILL.md) |
 
 > [m1kskills](https://github.com/m1kapp/m1kskills) 의 스킬 모음입니다.
 
@@ -32,8 +33,9 @@ https://raw.githubusercontent.com/m1kapp/m1kskills/main/AGENTS.md
 이 프로젝트에 어울리는 앱 아이콘과 파비콘을 만들어줘.
 ```
 
-웹을 못 읽는 환경이면 아래 `# Verify Badge` 부터 파일 끝까지 **전체 복사**해 붙여넣어도 동일합니다.
-계속 쓸 거면 이 파일을 레포 루트에 `AGENTS.md` 로 두세요 — 28개+ 툴이 자동으로 읽습니다.
+웹을 못 읽는 환경이면 필요한 스킬의 `SKILL.md`를 **대화에 붙여넣어** 일회성으로 쓸 수 있습니다.
+기존 `AGENTS.md`를 이 파일로 복사하거나 덮어쓰지 마세요. 지속 활성화는 Work Coordinates의
+관리 마커 기반 dry-run 절차로만 병합합니다.
 
 Claude Code면 설치가 더 편합니다:
 ```
@@ -41,7 +43,11 @@ Claude Code면 설치가 더 편합니다:
 /plugin install verify-badge@m1kskills
 /plugin install dualdeck@m1kskills
 /plugin install logodown@m1kskills
+/plugin install work-coordinates@m1kskills
 ```
+
+설치만으로 사용자 지침은 바뀌지 않습니다. 활성화하려면 새 대화에서
+`작업 좌표를 활성화해줘. 먼저 dry-run과 diff를 보여줘.`라고 명시적으로 요청하세요.
 
 ---
 

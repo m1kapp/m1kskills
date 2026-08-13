@@ -1,0 +1,39 @@
+{
+  "name": "work-coordinates",
+  "version": "0.1.0",
+  "description": "실질 작업의 북극성·현재·다음·검증을 유지하고 디버깅의 관측·재현·원인 수정·완화를 구분한다.",
+  "author": {
+    "name": "m1kapp",
+    "url": "https://m1k.app"
+  },
+  "homepage": "https://m1kapp.github.io/m1kskills/work-coordinates/",
+  "repository": "https://github.com/m1kapp/m1kskills",
+  "license": "MIT",
+  "keywords": [
+    "work-state",
+    "progress",
+    "debugging",
+    "evidence",
+    "agents"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Work Coordinates",
+    "shortDescription": "목표·현재·다음·검증을 잃지 않는 작업 좌표",
+    "longDescription": "세션을 넘는 북극성을 유지하고, 매 상태 보고에 현재 근거·다음 한 행동·복사 가능한 검증을 남깁니다. 디버깅에서는 관측, 재현, 가설, 원인 수정, 완화와 우회를 명확히 구분합니다. 활성화는 사용자가 요청한 경우에만 dry-run과 diff를 거쳐 비파괴적으로 수행합니다.",
+    "developerName": "m1kapp",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "작업 좌표를 활성화해줘. 먼저 dry-run과 diff를 보여줘.",
+      "지금 작업 상태를 작업 좌표로 보고해줘.",
+      "이 버그를 증거 기반 디버깅으로 진행해줘."
+    ],
+    "websiteURL": "https://m1kapp.github.io/m1kskills/work-coordinates/",
+    "brandColor": "#1D4ED8"
+  }
+}

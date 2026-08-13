@@ -6,3 +6,6 @@
 
 # 스킬 번들 자산도 배포물 — 위 *.html 무시에서 제외
 !plugins/**/assets/*.html
+
+# GitHub Pages 랜딩은 배포물 — 위 *.html 무시에서 제외
+!docs/**/*.html

@@ -1,19 +1,21 @@
 # m1kskills
 
 **AI 쓰다 유용했던 나만의 스킬 모음.**
-전부 **그냥 마크다운 프롬프트**라 어느 도구에 붙여넣어도 작동합니다. 준비물 없음.
+핵심은 **그냥 마크다운 프롬프트**라 어느 도구에 붙여넣어도 작동합니다.
 
 | 스킬 | 하는 일 | 부르는 법 |
 |---|---|---|
 | **verify-badge** | 자료에 **검증 이력 뱃지** — 실명 책임·신뢰 등급·1차 출처·못 한 것 | "뱃지 붙여줘" |
 | **dualdeck** | **리포트와 발표자료가 같은 HTML 한 장** — 8팔레트·PDF·한글 타이포 내장 | "리포트 써줘" |
 | **logodown** | **앱 아이콘·파비콘 한 벌** — 심볼 148개에서 직접 골라 후보 제시, SVG·ICO·PWA·manifest | "로고 만들어줘" |
+| **work-coordinates** | **작업의 북극성·현재·다음·검증 유지** — 증거 기반 디버깅과 비파괴 활성화 | "작업 좌표 활성화해줘" |
 
 ```
 /plugin marketplace add m1kapp/m1kskills
 /plugin install verify-badge@m1kskills
 /plugin install dualdeck@m1kskills
 /plugin install logodown@m1kskills
+/plugin install work-coordinates@m1kskills
 ```
 
 > 설치 후 `/reload-plugins` 한 번.
@@ -22,6 +24,40 @@
 ---
 
 ## 📦 스킬
+
+### `work-coordinates` — 목표를 잃지 않는 작업 좌표
+
+세션이 길어져도 작은 할 일을 목표로 착각하지 않게 **여러 세션의 북극성**을 유지합니다.
+상태가 바뀔 때마다 현재 근거, 다음 한 행동, 그대로 복사할 테스트와 기대 결과를 모바일 형식으로 남깁니다.
+
+디버깅에서는 관측·재현·가설·진단 계측·원인 수정·완화·우회를 구분합니다.
+수정 전 실패와 수정 후 같은 조건의 통과가 없으면 `근본 해결`이라고 부르지 않습니다.
+
+👉 [반응형 데모와 설치 안내](https://m1kapp.github.io/m1kskills/work-coordinates/)
+
+#### 설치와 활성화는 별개입니다
+
+플러그인 설치만으로 `AGENTS.md`는 바뀌지 않습니다. 영구 활성화는 사용자가 아래처럼 명시적으로 요청한 한 번의 절차입니다.
+
+```
+작업 좌표를 활성화해줘. 먼저 dry-run과 diff를 보여줘.
+```
+
+활성화 도구는 `CODEX_HOME`을 우선하고, 없으면 `~/.codex`를 씁니다. 비어 있지 않은
+`AGENTS.override.md`가 있으면 그 파일을, 아니면 `AGENTS.md`를 선택하며 이유를 표시합니다.
+기존 파일은 덮어쓰지 않고 관리 마커 블록만 삽입·갱신합니다. 적용 전 diff, 적용 시 백업,
+재실행 중복 방지, 제거 뒤 마커 밖 바이트 복원을 자동 검증합니다.
+
+Codex CLI에서 설치하려면:
+
+```
+codex plugin marketplace add m1kapp/m1kskills
+codex plugin add work-coordinates@m1kskills
+```
+
+Claude Code는 위의 `/plugin` 명령을 쓰고, Cursor는 저장소의 `.cursor-plugin` 매니페스트와
+`skills/work-coordinates` 정본 링크를 통해 같은 스킬을 읽습니다. 활성화 뒤에는 전역 지침을
+다시 읽도록 **새 세션**을 시작해 동작을 확인하세요.
 
 ### `verify-badge` — 검증 이력 뱃지 (도장 아님, 감사)
 
@@ -116,31 +152,42 @@ https://raw.githubusercontent.com/m1kapp/m1kskills/main/AGENTS.md
 지금 작업 중인 자료에 검증 이력 뱃지를 붙여줘.
 ```
 
-웹을 못 읽는 환경(브라우징 꺼진 ChatGPT 등)이면 [`AGENTS.md`](AGENTS.md) 를 열어 **전체 복사**해 붙여넣으면 똑같이 동작합니다. 본문이 그냥 마크다운이라 준비물이 없습니다.
+웹을 못 읽는 환경이면 필요한 [`skills/<이름>/SKILL.md`](skills/)만 대화에 붙여넣어
+일회성으로 쓸 수 있습니다. 기존 `AGENTS.md`를 통째로 복사하거나 덮어쓰지 마세요.
 
-**계속 쓸 거면 고정해 두세요:**
+**지속해서 쓸 때:**
 
 | 도구 | 두는 곳 |
 |---|---|
-| **Cursor · Copilot · Codex · Windsurf · Zed** | 레포 루트에 `AGENTS.md` 파일로 두면 자동 인식 |
+| **Codex** | 플러그인 설치 뒤 Work Coordinates의 dry-run 병합 |
+| **Cursor · Copilot · Windsurf · Zed** | 기존 프로젝트 지침을 보존한 수동 병합 |
 | **Claude 웹·앱** | Project → Project instructions |
 | **ChatGPT** | Custom GPT → Instructions |
 | **Gemini · 기타** | 대화 시작 시 위 3줄 |
 
 > `AGENTS.md` 는 [AAIF(Linux Foundation)](https://agents.md) 크로스툴 표준으로 28개+ 툴이 읽습니다.
-> 고정해 뒀다면 그냥 **"뱃지 붙여줘"** 한마디면 됩니다.
+> Work Coordinates 활성화는 관리 마커 사이만 바꾸며 프로젝트 `AGENTS.md`는 경고만 하고 수정하지 않습니다.
 
 
 ---
 
 ## ✅ 필요 조건
 
-**없습니다.** 스킬 본문이 전부 마크다운 프롬프트라 설치도, API 키도, Claude Code도 필요 없습니다.
-Claude Code를 쓴다면 플러그인 설치가 편할 뿐입니다.
+프롬프트로만 쓸 때는 없습니다. Work Coordinates의 비파괴 전역 활성화 도구는 Python 3가 필요합니다.
+API 키는 필요하지 않습니다.
 
 ---
 
 ## ❓ 자주 묻는 질문
+
+### `work-coordinates`
+
+**Q. 설치하면 제 `AGENTS.md`가 바뀌나요?**
+아니요. 설치와 활성화는 분리돼 있습니다. 사용자가 활성화를 명시해야 먼저 dry-run과 diff를 보여주고,
+다시 적용을 승인한 뒤에만 전역 파일의 관리 마커 블록을 바꿉니다.
+
+**Q. 프로젝트 지침과 충돌하면요?**
+Codex는 프로젝트 지침을 전역 지침 뒤에 읽습니다. 활성화 도구는 충돌 가능성을 경고하지만 프로젝트 파일은 수정하지 않습니다.
 
 ### `verify-badge`
 
@@ -170,10 +217,10 @@ Claude Code를 쓴다면 플러그인 설치가 편할 뿐입니다.
 ## 🔧 마켓플레이스 관리 (기여자용)
 
 새 플러그인 추가:
-1. `plugins/<이름>/.claude-plugin/plugin.json` + 컴포넌트(`skills/`, `commands/` 등) 추가
-2. `.claude-plugin/marketplace.json`의 `plugins` 배열에 항목 추가
-3. 프롬프트만으로 쓰는 스킬이면 루트 `skills/<이름>` 에 심링크를 걸어 크로스툴 매니페스트(`.codex-plugin`·`.cursor-plugin`)에도 노출
-4. `git push`
+1. `plugins/<이름>`에 클라이언트 매니페스트와 컴포넌트 추가
+2. Claude는 `.claude-plugin/marketplace.json`, Codex는 `.agents/plugins/marketplace.json`에 연결
+3. 루트 `skills/<이름>` 심링크로 Cursor와 루트 플러그인에도 같은 정본 노출
+4. skill·plugin validator와 영향 범위 테스트 뒤 버전 갱신
 
 기존 사용자는 `/plugin marketplace update m1kskills` 로 갱신받습니다.
 플러그인 수정 배포 시 `plugin.json`의 `version`을 올려야 사용자에게 업데이트가 노출됩니다.
