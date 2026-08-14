@@ -13,6 +13,7 @@ import unittest
 
 
 SCRIPT = Path(__file__).resolve().parent / "work_coordinates.py"
+RULES = SCRIPT.parent.parent / "references" / "work-coordinates.md"
 START = b"<!-- m1kskills:work-coordinates:start -->"
 END = b"<!-- m1kskills:work-coordinates:end -->"
 
@@ -128,6 +129,12 @@ class WorkCoordinatesFixtures(unittest.TestCase):
         self.command("remove", apply=True)
         self.assertEqual(target.read_bytes(), original)
         self.assertNotIn(START, target.read_bytes())
+
+    def test_6_results_require_clickable_markdown_links(self) -> None:
+        rules = RULES.read_text(encoding="utf-8")
+        self.assertIn("GitHub Flavored Markdown 링크", rules)
+        self.assertIn("[라벨](</절대/경로 with spaces>)", rules)
+        self.assertIn("맨 경로, 맨 URL, 백틱 경로는 금지", rules)
 
 
 if __name__ == "__main__":

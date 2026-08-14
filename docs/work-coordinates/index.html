@@ -236,7 +236,7 @@
                   <div class="coord-item"><strong>현재</strong><div class="coord-lines" id="previewCurrent"></div></div>
                   <div class="coord-item"><strong>다음</strong><div class="coord-lines" id="previewNext"></div></div>
                   <div class="coord-item"><strong>테스트</strong><div class="coord-lines test-block"><span class="tiny">입력 / 동작</span><code id="previewTest"></code><span class="tiny expected">기대</span><span id="previewExpected"></span></div></div>
-                  <div class="coord-item"><strong>결과</strong><div class="coord-lines"><span id="previewResult"></span></div></div>
+                  <div class="coord-item"><strong>결과</strong><div class="coord-lines"><a id="previewResult" href="#"></a></div></div>
                 </div>
               </div>
             </section>
@@ -368,7 +368,8 @@
       $('progress').value=percent+'%';$('progress').textContent=percent+'%';
       $('gauge').textContent='█'.repeat(milestone)+'░'.repeat(5-milestone)+' '+percent+'%';
       $('verdict').textContent=data.verdict;fillLines($('previewGoal'),$('goal').value);fillLines($('previewCurrent'),$('current').value);fillLines($('previewNext'),$('next').value);
-      $('previewTest').textContent=data.test;$('previewExpected').textContent=data.expected;$('previewResult').textContent=data.result;
+      $('previewTest').textContent=data.test;$('previewExpected').textContent=data.expected;
+      $('previewResult').textContent=data.result.startsWith('http')?'결과 바로 열기':'결과 파일 열기';$('previewResult').href=data.result;
       $('debugVerdict').textContent=data.debugVerdict;$('testPrompt').textContent=data.test;$('testExpected').textContent=data.expected;renderEvidence(data.evidence);
     }
     function choose(name){
