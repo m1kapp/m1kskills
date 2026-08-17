@@ -13,6 +13,7 @@ import unittest
 
 
 SCRIPT = Path(__file__).resolve().parent / "work_coordinates.py"
+RULES = SCRIPT.parent.parent / "references" / "work-coordinates.md"
 START = b"<!-- m1kskills:work-coordinates:start -->"
 END = b"<!-- m1kskills:work-coordinates:end -->"
 
@@ -128,6 +129,28 @@ class WorkCoordinatesFixtures(unittest.TestCase):
         self.command("remove", apply=True)
         self.assertEqual(target.read_bytes(), original)
         self.assertNotIn(START, target.read_bytes())
+
+    def test_6_openable_targets_require_clickable_markdown_links(self) -> None:
+        rules = RULES.read_text(encoding="utf-8")
+        self.assertIn("GitHub Flavored Markdown 링크", rules)
+        self.assertIn("`다음`, `테스트`, `결과`", rules)
+        self.assertIn("[파일명](/절대/파일경로) · [상위 폴더명](/절대/상위폴더)", rules)
+        self.assertIn("[파일명](</절대/경로 with spaces/file.md>)", rules)
+        self.assertIn("맨 경로, 맨 URL, 백틱 경로는 금지", rules)
+        self.assertNotIn("  - `[PR]", rules)
+        self.assertIn("같은 정본을 가리키는 기존의 더 짧은 워크스페이스 경로", rules)
+        self.assertIn("일부 클라이언트가 클릭 대상을 괄호로 펼치는 것", rules)
+        self.assertIn("가설 적용 · 인과 미확정", rules)
+        self.assertIn("근본 해결 · 전후 인과 확인", rules)
+        self.assertIn("완료물 · 미검증", rules)
+        self.assertIn("작업 좌표 전체에서 한 번만 링크", rules)
+        self.assertIn("위 PR #2", rules)
+        self.assertIn("PR만 링크하고 개별 커밋은 생략", rules)
+        self.assertIn("기본 1~2개, 최대 3개", rules)
+
+        self.command("activate", apply=True)
+        activated = (self.home / "AGENTS.md").read_text(encoding="utf-8")
+        self.assertIn("[work.md](/절대/docs/work.md) · [docs](/절대/docs) · 원인 수정", activated)
 
 
 if __name__ == "__main__":

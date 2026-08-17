@@ -1,6 +1,6 @@
 {
   "name": "work-coordinates",
-  "version": "0.1.0",
+  "version": "0.1.4",
   "description": "실질 작업의 북극성·현재·다음·검증을 유지하고 디버깅의 관측·재현·원인 수정·완화를 구분한다.",
   "author": {
     "name": "m1kapp",
