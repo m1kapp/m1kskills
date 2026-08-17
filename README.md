@@ -52,6 +52,18 @@
 기존 파일은 덮어쓰지 않고 관리 마커 블록만 삽입·갱신합니다. 적용 전 diff, 적용 시 백업,
 재실행 중복 방지, 제거 뒤 마커 밖 바이트 복원을 자동 검증합니다.
 
+플러그인 없이 CLI만 직접 쓸 수도 있습니다. 모든 변경 명령은 기본이 dry-run이고 `--apply`에서만 파일을 씁니다.
+
+```
+npx github:m1kapp/m1kskills status
+npx github:m1kapp/m1kskills activate
+npx github:m1kapp/m1kskills activate --apply
+npx github:m1kapp/m1kskills remove
+npx github:m1kapp/m1kskills remove --apply
+```
+
+플러그인과 `npx`는 같은 Node 실행기와 같은 `work-coordinates.md` 정본을 읽습니다. 설치 단계에서는 어떤 AGENTS도 수정하지 않습니다.
+
 Codex CLI에서 설치하려면:
 
 ```
@@ -177,7 +189,7 @@ https://raw.githubusercontent.com/m1kapp/m1kskills/main/AGENTS.md
 
 ## ✅ 필요 조건
 
-프롬프트로만 쓸 때는 없습니다. Work Coordinates의 비파괴 전역 활성화 도구는 Python 3가 필요합니다.
+프롬프트로만 쓸 때는 없습니다. Work Coordinates의 비파괴 전역 활성화 도구는 Node.js 18 이상이 필요합니다.
 API 키는 필요하지 않습니다.
 
 ---

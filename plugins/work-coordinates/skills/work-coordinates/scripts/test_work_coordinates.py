@@ -3,17 +3,21 @@
 
 from __future__ import annotations
 
+import json
 import os
 from pathlib import Path
 import re
+import shutil
 import subprocess
-import sys
 import tempfile
 import unittest
 
 
-SCRIPT = Path(__file__).resolve().parent / "work_coordinates.py"
-RULES = SCRIPT.parent.parent / "references" / "work-coordinates.md"
+PLUGIN = Path(__file__).resolve().parents[3]
+SCRIPT = PLUGIN / "bin" / "work-coordinates.mjs"
+RULES = PLUGIN / "skills" / "work-coordinates" / "references" / "work-coordinates.md"
+PACKAGE = PLUGIN.parents[1] / "package.json"
+NODE = shutil.which("node")
 START = b"<!-- m1kskills:work-coordinates:start -->"
 END = b"<!-- m1kskills:work-coordinates:end -->"
 
@@ -28,6 +32,8 @@ def outside_managed(data: bytes) -> bytes:
 
 class WorkCoordinatesFixtures(unittest.TestCase):
     def setUp(self) -> None:
+        if NODE is None:
+            self.skipTest("node is required")
         self.temporary = tempfile.TemporaryDirectory()
         self.root = Path(self.temporary.name)
         self.home = self.root / "codex-home"
@@ -41,7 +47,7 @@ class WorkCoordinatesFixtures(unittest.TestCase):
     def command(self, action: str, apply: bool = False) -> subprocess.CompletedProcess[str]:
         environment = os.environ.copy()
         environment["CODEX_HOME"] = str(self.home)
-        arguments = [sys.executable, str(SCRIPT), action]
+        arguments = [NODE, str(SCRIPT), action]
         if apply:
             arguments.append("--apply")
         return subprocess.run(
@@ -151,6 +157,20 @@ class WorkCoordinatesFixtures(unittest.TestCase):
         self.command("activate", apply=True)
         activated = (self.home / "AGENTS.md").read_text(encoding="utf-8")
         self.assertIn("[work.md](/절대/docs/work.md) · [docs](/절대/docs) · 원인 수정", activated)
+
+    def test_7_package_exposes_the_single_node_cli(self) -> None:
+        package = json.loads(PACKAGE.read_text(encoding="utf-8"))
+        relative_bin = package["bin"]["work-coordinates"]
+        self.assertEqual((PACKAGE.parent / relative_bin).resolve(), SCRIPT)
+        self.assertEqual(package["engines"]["node"], ">=18")
+
+        version = subprocess.run(
+            [NODE, str(SCRIPT), "--version"],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(version.stdout.strip(), package["version"])
 
 
 if __name__ == "__main__":
