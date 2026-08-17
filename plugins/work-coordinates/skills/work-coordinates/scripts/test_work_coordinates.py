@@ -143,6 +143,10 @@ class WorkCoordinatesFixtures(unittest.TestCase):
         self.assertIn("가설 적용 · 인과 미확정", rules)
         self.assertIn("근본 해결 · 전후 인과 확인", rules)
         self.assertIn("완료물 · 미검증", rules)
+        self.assertIn("작업 좌표 전체에서 한 번만 링크", rules)
+        self.assertIn("위 PR #2", rules)
+        self.assertIn("PR만 링크하고 개별 커밋은 생략", rules)
+        self.assertIn("기본 1~2개, 최대 3개", rules)
 
         self.command("activate", apply=True)
         activated = (self.home / "AGENTS.md").read_text(encoding="utf-8")
