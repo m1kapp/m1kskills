@@ -91,6 +91,12 @@
     .target-links:empty{display:none!important}
     .target-links a{display:inline!important;max-width:100%;overflow-wrap:anywhere}
     .target-links .sep{color:var(--muted);font-weight:500}
+    .result-list{display:grid;gap:6px}
+    .result-item{display:flex;flex-wrap:wrap;align-items:center;gap:3px 7px}
+    .result-item .target-links{margin-top:0}
+    .result-stage{color:var(--green);font-weight:800}
+    .result-stage.partial{color:var(--amber)}
+    .result-stage.caution{color:var(--red)}
     .test-block{margin-top:4px;padding:13px;border-radius:12px;background:#f5f7fb;border:1px solid #e2e6ef}
     .test-block .tiny{display:block;color:var(--muted);font-size:11px;font-weight:780;margin-bottom:3px}
     .test-block .tiny.expected{margin-top:9px}
@@ -240,14 +246,14 @@
                   <div class="coord-item"><strong>현재</strong><div class="coord-lines" id="previewCurrent"></div></div>
                   <div class="coord-item"><strong>다음</strong><div class="coord-lines"><div id="previewNext"></div><div class="target-links" id="previewNextTarget"></div></div></div>
                   <div class="coord-item"><strong>테스트</strong><div class="coord-lines test-block"><span class="tiny">입력 / 동작</span><code id="previewTest"></code><span class="tiny expected">대상</span><span class="target-links" id="previewTestTarget"></span><span class="tiny expected">기대</span><span id="previewExpected"></span></div></div>
-                  <div class="coord-item"><strong>결과</strong><div class="coord-lines target-links" id="previewResult"></div></div>
+                  <div class="coord-item"><strong>결과</strong><div class="coord-lines result-list" id="previewResult"></div></div>
                 </div>
               </div>
             </section>
             <div class="proof" role="group" aria-label="형식 보장">
               <div><b>5칸 게이지</b><span>메시지 수가 아닌 이정표로만 이동</span></div>
               <div><b>40자 안쪽</b><span>긴 내용은 모바일에서 ·로 분절</span></div>
-              <div><b>파일 · 상위 폴더</b><span>대상은 짧은 링크로 바로 열기</span></div>
+              <div><b>짧은 링크 · 해결 단계</b><span>대상과 검증 수준을 함께 표시</span></div>
             </div>
           </div>
         </div>
@@ -273,7 +279,7 @@
         <div class="principles">
           <article class="principle"><span class="num">01</span><h3>목표는 북극성</h3><p>오늘 할 일을 목표로 바꾸지 않습니다. 이전 좌표의 목표 문구와 게이지를 세션 사이에 계승합니다.</p></article>
           <article class="principle"><span class="num">02</span><h3>다음은 행동 하나</h3><p>목표에 가장 가까운 관측 가능한 행동 하나만 둡니다. 사용자가 “다음”이라고 하면 실제로 그 게이트까지 갑니다.</p></article>
-          <article class="principle"><span class="num">03</span><h3>검증은 복사 가능</h3><p>정확한 입력과 기대 결과를 남기고, 실제 대상은 파일명과 바로 위 폴더 링크로 짧게 엽니다.</p></article>
+          <article class="principle"><span class="num">03</span><h3>결과는 성격까지</h3><p>파일명과 위 폴더를 짧게 열고, 관측·가설·완화·원인 수정·근본 해결을 구분합니다.</p></article>
         </div>
       </div>
     </section>
@@ -320,7 +326,7 @@
         test:'배포 후 “버그 수정”을 선택하고 다음을 “같은 입력으로 재검증”으로 바꾸세요.',
         expected:'모바일 좌표와 디버깅 분류가 즉시 바뀌고 가로 스크롤이 생기지 않음',
         testTarget:[{label:'랜딩 데모',href:'#demo',kind:'대상'}],
-        results:[{label:'m1kskills',href:'https://github.com/m1kapp/m1kskills',kind:'저장소'}],debugVerdict:'검증 전 · 브라우저 관측 필요',
+        results:[{links:[{label:'m1kskills',href:'https://github.com/m1kapp/m1kskills',kind:'저장소'}],stage:'완료물 · 일부 검증',tone:'partial'}],debugVerdict:'검증 전 · 브라우저 관측 필요',
         evidence:[
           ['관측','자동 회귀','6개 fixture가 비파괴 변경과 링크 계약을 확인함'],
           ['재현','빈 파일부터 제거까지','수정 전후 경계를 임시 CODEX_HOME에서 반복 실행함'],
@@ -344,8 +350,14 @@
           {label:'scripts',href:'https://github.com/m1kapp/m1kskills/tree/main/plugins/work-coordinates/skills/work-coordinates/scripts',kind:'상위 폴더'}
         ],
         results:[
-          {label:'work-coordinates.md',href:'https://github.com/m1kapp/m1kskills/blob/main/plugins/work-coordinates/skills/work-coordinates/references/work-coordinates.md',kind:'파일'},
-          {label:'references',href:'https://github.com/m1kapp/m1kskills/tree/main/plugins/work-coordinates/skills/work-coordinates/references',kind:'상위 폴더'}
+          {links:[
+            {label:'work-coordinates.md',href:'https://github.com/m1kapp/m1kskills/blob/main/plugins/work-coordinates/skills/work-coordinates/references/work-coordinates.md',kind:'파일'},
+            {label:'references',href:'https://github.com/m1kapp/m1kskills/tree/main/plugins/work-coordinates/skills/work-coordinates/references',kind:'상위 폴더'}
+          ],stage:'가설 적용 · 인과 미확정',tone:'caution'},
+          {links:[
+            {label:'test_work_coordinates.py',href:'https://github.com/m1kapp/m1kskills/blob/main/plugins/work-coordinates/skills/work-coordinates/scripts/test_work_coordinates.py',kind:'파일'},
+            {label:'scripts',href:'https://github.com/m1kapp/m1kskills/tree/main/plugins/work-coordinates/skills/work-coordinates/scripts',kind:'상위 폴더'}
+          ],stage:'재현 확보',tone:'partial'}
         ],debugVerdict:'원인 수정 후보 · 같은 재현 필요',
         evidence:[
           ['증상','두 번째 결제 409','같은 주문의 재시도에서만 unique constraint가 발생함'],
@@ -363,7 +375,7 @@
         test:'운영 배포 후 /health와 신규 작업 생성 화면을 열고 “테스트 작업”을 저장해 주세요.',
         expected:'/health 200 · 목록에 테스트 작업 1건 표시 · 콘솔 오류 0건',
         testTarget:[{label:'배포 데모',href:'https://m1kapp.github.io/m1kskills/work-coordinates/',kind:'대상'}],
-        results:[{label:'Pull requests',href:'https://github.com/m1kapp/m1kskills/pulls',kind:'PR 목록'}],debugVerdict:'인계 · 운영 검증 미실행',
+        results:[{links:[{label:'PR 목록',href:'https://github.com/m1kapp/m1kskills/pulls',kind:'PR 목록'}],stage:'완료물 · 일부 검증',tone:'partial'}],debugVerdict:'인계 · 운영 검증 미실행',
         evidence:[
           ['관측','스테이징 smoke','health 200과 핵심 UI 저장을 실제 브라우저로 확인함'],
           ['재현','회귀 시나리오','배포 전 실패 경로와 성공 경로를 같은 요청으로 고정함'],
@@ -385,6 +397,9 @@
       links.forEach((link,index)=>{if(index){const sep=document.createElement('span');sep.className='sep';sep.textContent='·';nodes.push(sep)}const anchor=document.createElement('a');anchor.href=link.href;anchor.textContent=link.label;anchor.setAttribute('aria-label',(link.kind?link.kind+': ':'')+link.label);nodes.push(anchor)});
       element.replaceChildren(...nodes);
     }
+    function renderResults(element,items=[]){
+      element.replaceChildren(...items.map(item=>{const row=document.createElement('div');row.className='result-item';const links=document.createElement('div');links.className='target-links';renderLinks(links,item.links);const sep=document.createElement('span');sep.className='sep';sep.textContent='·';const stage=document.createElement('span');stage.className='result-stage '+(item.tone||'');stage.textContent=item.stage;row.append(links,sep,stage);return row}));
+    }
     function renderEvidence(items){
       $('evidence').replaceChildren(...items.map(([kind,title,detail,style])=>{const article=document.createElement('article');if(style)article.className=style;const k=document.createElement('span');k.className='kind';k.textContent=kind;const h=document.createElement('h4');h.textContent=title;const p=document.createElement('p');p.textContent=detail;article.append(k,h,p);return article}))
     }
@@ -394,7 +409,7 @@
       $('gauge').textContent='█'.repeat(milestone)+'░'.repeat(5-milestone)+' '+percent+'%';
       $('verdict').textContent=data.verdict;fillLines($('previewGoal'),$('goal').value);fillLines($('previewCurrent'),$('current').value);fillLines($('previewNext'),$('next').value);renderLinks($('previewNextTarget'),data.nextTarget);
       $('previewTest').textContent=data.test;$('previewExpected').textContent=data.expected;
-      renderLinks($('previewTestTarget'),data.testTarget);renderLinks($('previewResult'),data.results);
+      renderLinks($('previewTestTarget'),data.testTarget);renderResults($('previewResult'),data.results);
       $('debugVerdict').textContent=data.debugVerdict;$('testPrompt').textContent=data.test;$('testExpected').textContent=data.expected;renderEvidence(data.evidence);
     }
     function choose(name){

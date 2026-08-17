@@ -138,10 +138,15 @@ class WorkCoordinatesFixtures(unittest.TestCase):
         self.assertIn("[파일명](</절대/경로 with spaces/file.md>)", rules)
         self.assertIn("맨 경로, 맨 URL, 백틱 경로는 금지", rules)
         self.assertNotIn("  - `[PR]", rules)
+        self.assertIn("같은 정본을 가리키는 기존의 더 짧은 워크스페이스 경로", rules)
+        self.assertIn("일부 클라이언트가 클릭 대상을 괄호로 펼치는 것", rules)
+        self.assertIn("가설 적용 · 인과 미확정", rules)
+        self.assertIn("근본 해결 · 전후 인과 확인", rules)
+        self.assertIn("완료물 · 미검증", rules)
 
         self.command("activate", apply=True)
         activated = (self.home / "AGENTS.md").read_text(encoding="utf-8")
-        self.assertIn("[work.md](/절대/docs/work.md) · [docs](/절대/docs)", activated)
+        self.assertIn("[work.md](/절대/docs/work.md) · [docs](/절대/docs) · 원인 수정", activated)
 
 
 if __name__ == "__main__":
