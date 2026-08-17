@@ -1,7 +1,7 @@
 {
   "name": "work-coordinates",
-  "version": "0.1.4",
-  "description": "실질 작업의 북극성·현재·다음·검증을 유지하고 디버깅의 관측·재현·원인 수정·완화를 구분한다.",
+  "version": "0.2.0",
+  "description": "실질 작업의 북극성·현재·다음·검증을 유지하고, npx로도 비파괴 활성화하며 디버깅 단계를 구분한다.",
   "author": {
     "name": "m1kapp",
     "url": "https://m1k.app"
@@ -20,7 +20,7 @@
   "interface": {
     "displayName": "Work Coordinates",
     "shortDescription": "목표·현재·다음·검증을 잃지 않는 작업 좌표",
-    "longDescription": "세션을 넘는 북극성을 유지하고, 매 상태 보고에 현재 근거·다음 한 행동·복사 가능한 검증을 남깁니다. 디버깅에서는 관측, 재현, 가설, 원인 수정, 완화와 우회를 명확히 구분합니다. 활성화는 사용자가 요청한 경우에만 dry-run과 diff를 거쳐 비파괴적으로 수행합니다.",
+    "longDescription": "세션을 넘는 북극성을 유지하고, 매 상태 보고에 현재 근거·다음 한 행동·복사 가능한 검증을 남깁니다. 디버깅 단계를 구분하며, 플러그인 또는 npx 활성화는 사용자가 요청한 경우에만 dry-run과 diff를 거쳐 비파괴적으로 수행합니다.",
     "developerName": "m1kapp",
     "category": "Productivity",
     "capabilities": [

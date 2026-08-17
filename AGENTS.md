@@ -37,6 +37,13 @@ https://raw.githubusercontent.com/m1kapp/m1kskills/main/AGENTS.md
 기존 `AGENTS.md`를 이 파일로 복사하거나 덮어쓰지 마세요. 지속 활성화는 Work Coordinates의
 관리 마커 기반 dry-run 절차로만 병합합니다.
 
+플러그인 없이 활성화 도구만 쓸 때도 기본은 dry-run입니다:
+```
+npx github:m1kapp/m1kskills status
+npx github:m1kapp/m1kskills activate
+npx github:m1kapp/m1kskills activate --apply
+```
+
 Claude Code면 설치가 더 편합니다:
 ```
 /plugin marketplace add m1kapp/m1kskills

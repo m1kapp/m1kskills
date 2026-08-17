@@ -1,0 +1,33 @@
+{
+  "name": "@m1kapp/work-coordinates",
+  "version": "0.2.0",
+  "description": "Non-destructive Work Coordinates activation for Codex AGENTS instructions",
+  "bin": {
+    "work-coordinates": "plugins/work-coordinates/bin/work-coordinates.mjs"
+  },
+  "files": [
+    "plugins/work-coordinates/bin/",
+    "plugins/work-coordinates/skills/work-coordinates/references/work-coordinates.md",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/m1kapp/m1kskills.git"
+  },
+  "homepage": "https://m1kapp.github.io/m1kskills/work-coordinates/",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "agents",
+    "work-state",
+    "debugging",
+    "productivity"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

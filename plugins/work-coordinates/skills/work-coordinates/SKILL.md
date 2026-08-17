@@ -11,22 +11,22 @@ Read [references/work-coordinates.md](references/work-coordinates.md) before rep
 
 - For a status report, handoff, completion, pause, or substantial work session, follow the canonical rules directly.
 - For debugging, apply the canonical evidence sequence and label the change honestly.
-- For setup, inspection, update, or removal, use `scripts/work_coordinates.py`.
+- For setup, inspection, update, or removal, resolve `../../bin/work-coordinates.mjs` relative to this `SKILL.md` and invoke that single bundled Node CLI by its absolute path. Never assume the user's current working directory is the skill directory.
 
 ## Activate safely
 
 Installing the plugin must not modify any `AGENTS.md` file. Activate only after the user explicitly asks to activate or install the persistent rules.
 
-1. Run the dry-run first:
+1. Resolve the bundled CLI path and run the dry-run first:
 
-   `python3 scripts/work_coordinates.py activate`
+   `node <resolved-cli-path> activate`
 
 2. Show the selected file, selection reason, project-instruction warning, and unified diff.
 3. Run the write only after explicit approval:
 
-   `python3 scripts/work_coordinates.py activate --apply`
+   `node <resolved-cli-path> activate --apply`
 
-The script uses `CODEX_HOME` when set and `~/.codex` otherwise. It chooses the active non-empty global file according to Codex precedence, never edits project instructions, creates a timestamped backup before changing an existing file, and updates only the managed marker block.
+The CLI uses `CODEX_HOME` when set and `~/.codex` otherwise. It chooses the active non-empty global file according to Codex precedence, never edits project instructions, creates a timestamped backup before changing an existing file, and updates only the managed marker block. The public no-plugin entry point is `npx github:m1kapp/m1kskills`; it executes this same CLI and canonical reference rather than a second implementation.
 
 After activation, tell the user to start a new Codex session because global instructions load at session start. Give this exact verification:
 
@@ -36,8 +36,8 @@ Expected: the final response ends with `◤◤◤◤◤◤◤◤`, a five-cell g
 
 ## Inspect or remove
 
-- Inspect without writing: `python3 scripts/work_coordinates.py status`
-- Preview removal: `python3 scripts/work_coordinates.py remove`
-- Remove after explicit approval: `python3 scripts/work_coordinates.py remove --apply`
+- Inspect without writing: `node <resolved-cli-path> status`
+- Preview removal: `node <resolved-cli-path> remove`
+- Remove after explicit approval: `node <resolved-cli-path> remove --apply`
 
 Removal deletes only the managed block. Never delete or overwrite a user instruction file. If marker structure is malformed or duplicated, stop and report it instead of guessing.
