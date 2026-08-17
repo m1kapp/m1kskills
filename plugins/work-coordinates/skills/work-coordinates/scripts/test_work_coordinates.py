@@ -130,11 +130,18 @@ class WorkCoordinatesFixtures(unittest.TestCase):
         self.assertEqual(target.read_bytes(), original)
         self.assertNotIn(START, target.read_bytes())
 
-    def test_6_results_require_clickable_markdown_links(self) -> None:
+    def test_6_openable_targets_require_clickable_markdown_links(self) -> None:
         rules = RULES.read_text(encoding="utf-8")
         self.assertIn("GitHub Flavored Markdown 링크", rules)
-        self.assertIn("[라벨](</절대/경로 with spaces>)", rules)
+        self.assertIn("`다음`, `테스트`, `결과`", rules)
+        self.assertIn("[파일명](/절대/파일경로) · [상위 폴더명](/절대/상위폴더)", rules)
+        self.assertIn("[파일명](</절대/경로 with spaces/file.md>)", rules)
         self.assertIn("맨 경로, 맨 URL, 백틱 경로는 금지", rules)
+        self.assertNotIn("  - `[PR]", rules)
+
+        self.command("activate", apply=True)
+        activated = (self.home / "AGENTS.md").read_text(encoding="utf-8")
+        self.assertIn("[work.md](/절대/docs/work.md) · [docs](/절대/docs)", activated)
 
 
 if __name__ == "__main__":
